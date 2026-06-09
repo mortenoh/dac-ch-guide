@@ -21,10 +21,10 @@ export AUTH="admin:district"
 
 ## Step 1 - Pick a model template
 
-List the templates and find the one to build on. We use **chapkit-ewars-model** (id `11`):
+List the templates to find the one to build on (we use **chapkit-ewars-model**):
 
 ```bash
-curl -s -u "$AUTH" "$CHAP/crud/model-templates" \
+curl -fsS -u "$AUTH" "$CHAP/crud/model-templates" \
   | jq -r '.[] | "\(.id)\t\(.name)\t\(.displayName)"'
 ```
 
@@ -33,11 +33,19 @@ curl -s -u "$AUTH" "$CHAP/crud/model-templates" \
 ...
 ```
 
+The numeric ids are assigned by your database, so resolve the one you want **by name** rather
+than hard-coding it:
+
+```bash
+TEMPLATE_ID=$(curl -fsS -u "$AUTH" "$CHAP/crud/model-templates" \
+  | jq -r '.[] | select(.name=="chapkit-ewars-model") | .id')
+```
+
 Inspect what that template lets you set - its required covariates and its options:
 
 ```bash
-curl -s -u "$AUTH" "$CHAP/crud/model-templates" \
-  | jq '.[] | select(.id==11) | {requiredCovariates, userOptions: (.userOptions | keys)}'
+curl -fsS -u "$AUTH" "$CHAP/crud/model-templates" \
+  | jq --argjson t "$TEMPLATE_ID" '.[] | select(.id==$t) | {requiredCovariates, userOptions: (.userOptions | keys)}'
 ```
 
 ```json
@@ -51,42 +59,43 @@ So `population` is always required, and you can tune `n_lags`, `precision`, and
 ## Step 2 - Create the configured model
 
 `POST` the template id, a name, the option values, and any **additional** covariates (beyond
-the required `population`):
+the required `population`). Build the body with `jq` so `$TEMPLATE_ID` is filled in, and
+**capture the canonical name** from the response - that string is how you run the model later:
 
 ```bash
-curl -s -u "$AUTH" -X POST "$CHAP/crud/configured-models" \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "name": "EWARS climate + region-seasonal",
-    "modelTemplateId": 11,
-    "userOptionValues": { "n_lags": [3], "precision": 0.01, "region_seasonal": true },
-    "additionalContinuousCovariates": ["rainfall", "mean_temperature"]
-  }' | jq '{id, name, usesChapkit, userOptionValues, additionalContinuousCovariates}'
+MODEL_NAME=$(jq -n --argjson t "$TEMPLATE_ID" '{
+    name: "EWARS climate + region-seasonal",
+    modelTemplateId: $t,
+    userOptionValues: { n_lags: [3], precision: 0.01, region_seasonal: true },
+    additionalContinuousCovariates: ["rainfall", "mean_temperature"]
+  }' \
+  | curl -fsS -u "$AUTH" -X POST "$CHAP/crud/configured-models" \
+      -H 'Content-Type: application/json' -d @- \
+  | jq -r '.name')
+
+echo "$MODEL_NAME"
 ```
 
-```json
-{
-  "id": 13,
-  "name": "chapkit-ewars-model:EWARS climate + region-seasonal",
-  "usesChapkit": true,
-  "userOptionValues": { "n_lags": [3], "precision": 0.01, "region_seasonal": true },
-  "additionalContinuousCovariates": ["rainfall", "mean_temperature"]
-}
+```text
+chapkit-ewars-model:EWARS climate + region-seasonal
 ```
-
-The new model gets an **id** (here `13`) - that is what you reference when running it.
 
 !!! tip "n_lags is per covariate"
     `n_lags` is a list, one entry per additional covariate (in order). A single-element list
     like `[3]` broadcasts to all of them.
 
+!!! note "Creating is idempotent"
+    Re-running the same `POST` returns the **existing** model (same id) rather than creating a
+    duplicate, so it is safe to repeat.
+
 ## Step 3 - Confirm and use it
 
-It now appears alongside the built-in models:
+It now appears alongside the built-in models (find it by name - the id depends on your
+database):
 
 ```bash
-curl -s -u "$AUTH" "$CHAP/crud/configured-models" \
-  | jq -r '.[] | select(.id==13) | "\(.id)\t\(.displayName)"'
+curl -fsS -u "$AUTH" "$CHAP/crud/configured-models" \
+  | jq -r --arg n "$MODEL_NAME" '.[] | select(.name==$n) | "\(.id)\t\(.displayName)"'
 ```
 
 ```text
@@ -94,8 +103,15 @@ curl -s -u "$AUTH" "$CHAP/crud/configured-models" \
 ```
 
 Run it exactly like the stock model - build a request as in the
-[evaluation curl page](with-curl.md), but set `"modelId": 13` (or the name) when you create the
-backtest or prediction.
+[evaluation curl page](with-curl.md), but set the `modelId` to this **canonical name**:
+
+```json
+"modelId": "chapkit-ewars-model:EWARS climate + region-seasonal"
+```
+
+!!! warning "modelId is a string, not the numeric id"
+    The run endpoints want the model's canonical **name**. Passing the numeric id (e.g. `13`)
+    returns **HTTP 422** - use `$MODEL_NAME` from Step 2.
 
 !!! note "Where the predictions land"
     This variant targets **disease cases** (dengue), so its forecasts import into the existing
@@ -104,9 +120,11 @@ backtest or prediction.
     DHIS2 first.
 
 !!! note "Assignment: configure your own model"
-    - [ ] List the model templates and pick `chapkit-ewars-model` (id `11`).
-    - [ ] Create a variant with `region_seasonal: true` and the climate covariates.
-    - [ ] Confirm it appears in `crud/configured-models`, then run an evaluation against its id.
+    - [ ] Resolve the `chapkit-ewars-model` template id by name.
+    - [ ] Create a variant with `region_seasonal: true` and the climate covariates, capturing
+      its canonical name.
+    - [ ] Confirm it appears in `crud/configured-models`, then run an evaluation with that name
+      as the `modelId`.
 
 ## What's next
 

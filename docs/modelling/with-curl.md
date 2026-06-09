@@ -21,7 +21,7 @@ export AUTH="admin:district"
 ## Step 1 - Find the model
 
 ```bash
-curl -s -u "$AUTH" "$CHAP/crud/configured-models" \
+curl -fsS -u "$AUTH" "$CHAP/crud/configured-models" \
   | jq -r '.[] | "\(.id)\t\(.name)\t\(.displayName)"'
 ```
 
@@ -40,7 +40,7 @@ OUS="W6sNfkJcXGC;YvLOmtTQD6b;XKGgynPS1WZ;rO2RVJWHpCe;FRmrFTE63D0;MBZYTqkEgwf;hde
 PES="202301;202302;202303;202304;202305;202306;202307;202308;202309;202310;202311;202312;202401;202402;202403;202404;202405;202406;202407;202408;202409;202410;202411;202412"
 DXS="SK9a8nJJTAI;D8Q6nNeQ7i3;DZte8CXJ6zJ;Pjd8Rn6mTb0"   # disease cases, population, rainfall, temperature
 
-curl -s -u "$AUTH" \
+curl -fsS -u "$AUTH" \
   "$DHIS2/analytics.json?dimension=dx:$DXS&dimension=ou:$OUS&dimension=pe:$PES&skipMeta=true" \
   -o analytics.json
 
@@ -51,7 +51,10 @@ jq '{headers:[.headers[].name], rowCount:(.rows|length)}' analytics.json
 { "headers": ["dx", "ou", "pe", "value"], "rowCount": 1656 }
 ```
 
-Each row is `[dataElement, orgUnit, period, value]`.
+Each row is `[dataElement, orgUnit, period, value]`. Note the count: the three covariates have
+a value for every province-month (432 rows each), but the **disease-cases target has fewer**
+(360) - some province-months simply have no reported cases. That is expected; CHAP handles the
+missing target observations, so you pass the data through as-is.
 
 ## Step 3 - Get the org-unit geometry
 
@@ -59,7 +62,7 @@ The run also needs each province's polygon, which DHIS2 serves alongside the org
 [metadata / organisation units API](https://docs.dhis2.org/en/develop/using-the-api/dhis-core-version-242/metadata.html)):
 
 ```bash
-curl -s -u "$AUTH" \
+curl -fsS -u "$AUTH" \
   "$DHIS2/organisationUnits.json?filter=level:eq:2&fields=id,geometry&paging=false" \
   -o orgunits.json
 ```
@@ -93,45 +96,65 @@ jq -n --slurpfile a analytics.json --slurpfile o orgunits.json '
 `providedData` is the data you supply; `dataToBeFetched` stays empty because you are providing
 everything. `dataSources` records which dataElement backs each feature.
 
-## Step 5 - Create the evaluation
+## Step 5 - Validate, then create the evaluation
 
-`POST` the request. The endpoint returns a **job** that runs the model in the background:
+First do a **dry run**. It validates the data for all 18 provinces *synchronously* (no model
+run), which is worth doing before a multi-minute evaluation - especially in a workshop:
 
 ```bash
-curl -s -u "$AUTH" -X POST "$CHAP/analytics/create-backtest-with-data/" \
+curl -fsS -u "$AUTH" -X POST "$CHAP/analytics/create-backtest-with-data/?dryRun=true" \
   -H 'Content-Type: application/json' -d @request.json
 ```
 
 ```json
-{ "id": "64662ca5-7196-4e48-aad0-6bafb5fce341", "importedCount": 18, "rejected": [] }
+{ "id": null, "importedCount": 18, "rejected": [] }
 ```
+
+`rejected: []` and `importedCount: 18` means every province validated. Now run it for real and
+**capture the job id** it returns:
+
+```bash
+JOB_ID=$(curl -fsS -u "$AUTH" -X POST "$CHAP/analytics/create-backtest-with-data/" \
+  -H 'Content-Type: application/json' -d @request.json | jq -r '.id')
+echo "$JOB_ID"
+```
+
+!!! tip "Use `-fsS`, not `-s`"
+    `curl -fsS` fails loudly on an HTTP error (and shows the message) instead of printing an
+    error body that `jq` then chokes on - so a `422` or `500` does not masquerade as malformed
+    JSON. Worth it on every `POST`.
 
 ## Step 6 - Wait for the job, then read the result
 
-Poll the jobs until yours reaches `SUCCESS`; its `result` is the new backtest id:
+A job's status is a plain JSON string. Poll it until it reads `"SUCCESS"`:
 
 ```bash
-curl -s -u "$AUTH" "$CHAP/jobs" \
-  | jq -r '.[] | "\(.status)\t\(.type)\t\(.name)"'
-```
-
-```text
-SUCCESS   create_backtest_from_data   EWARS - Laos provinces 2023-2024
-```
-
-Read its metrics (lower error is better; coverage near the interval width is well-calibrated):
-
-```bash
-curl -s -u "$AUTH" "$CHAP/crud/backtests/<id>" | jq '.aggregateMetrics | {mae, rmse, crps, coverage_10_90}'
+curl -fsS -u "$AUTH" "$CHAP/jobs/$JOB_ID"
 ```
 
 ```json
-{ "mae": 29.26, "rmse": 50.18, "crps": 21.95, "coverage_10_90": 0.69 }
+"SUCCESS"
 ```
 
-!!! note
-    EWARS is a Bayesian model, so exact metric values vary a little from run to run - expect
-    numbers in this range rather than identical ones.
+Then read the evaluation - metrics and all - straight from the finished job:
+
+```bash
+curl -fsS -u "$AUTH" "$CHAP/jobs/$JOB_ID/evaluation_result" \
+  | jq '.aggregateMetrics | {mae, rmse, crps, coverage_10_90}'
+```
+
+```json
+{ "mae": 35.48, "rmse": 57.94, "crps": 26.71, "coverage_10_90": 0.70 }
+```
+
+Lower MAE / RMSE / CRPS is better; `coverage_10_90` near `0.8` means the 10-90% interval is
+well-calibrated.
+
+!!! warning "Your numbers will differ - that is fine"
+    EWARS is a Bayesian model and the demo target has gaps, so metrics move noticeably between
+    runs. MAE in the **low-to-mid 30s** is typical here, but a run at 29 or 38 is just as valid.
+    Judge a model by **comparing runs**, not against a fixed number - a successful run with
+    different metrics is not wrong.
 
 ## Predicting instead
 
@@ -142,21 +165,23 @@ to predict. Build the request exactly as in Step 4 (you can reuse `request.json`
 ```bash
 jq '. + {nPeriods: 3}' request.json > prediction-request.json
 
-curl -s -u "$AUTH" -X POST "$CHAP/analytics/make-prediction" \
-  -H 'Content-Type: application/json' -d @prediction-request.json
+PRED_JOB=$(curl -fsS -u "$AUTH" -X POST "$CHAP/analytics/make-prediction" \
+  -H 'Content-Type: application/json' -d @prediction-request.json | jq -r '.id')
 ```
 
-Poll the job as before, then read the forecast:
+Poll the job as before, then read the forecast from its `prediction_result`:
 
 ```bash
-curl -s -u "$AUTH" "$CHAP/crud/predictions/<id>" \
-  | jq '{id, name, modelId, nPeriods, orgUnits:(.orgUnits|length)}'
+curl -fsS -u "$AUTH" "$CHAP/jobs/$PRED_JOB"                      # "SUCCESS"
+curl -fsS -u "$AUTH" "$CHAP/jobs/$PRED_JOB/prediction_result" \
+  | jq '{name, modelId, nPeriods, orgUnits:(.orgUnits|length)}'
 ```
 
 !!! note "Assignment: drive chap from curl"
     - [ ] Fetch the data from the analytics API and build `request.json`.
-    - [ ] `POST` it to create an evaluation and watch the job reach `SUCCESS`.
-    - [ ] Read its `aggregateMetrics`, then create a prediction (`nPeriods: 3`) the same way.
+    - [ ] Dry-run it (`?dryRun=true`), then create the evaluation, capturing the `JOB_ID`.
+    - [ ] Poll `…/jobs/$JOB_ID` to `"SUCCESS"` and read `…/jobs/$JOB_ID/evaluation_result`.
+    - [ ] Create a prediction (`nPeriods: 3`) the same way and read its `prediction_result`.
 
 ## What's next
 
