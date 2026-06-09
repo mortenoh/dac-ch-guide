@@ -72,11 +72,12 @@ your model. You usually also edit `main.py` to:
 
 ## Step 3 - Run it
 
-The Docker build needs a lock file, so generate it once, then start the service:
+The Docker build needs a lock file, so generate it once, then start the service. Run it
+**detached** (`-d`) so your terminal stays free for the next steps:
 
 ```bash
-uv lock                    # writes uv.lock (the build needs it)
-docker compose up --build
+uv lock                       # writes uv.lock (the build needs it)
+docker compose up -d --build  # -d runs the service in the background
 ```
 
 Check it is alive, and open its interactive API docs:
@@ -112,9 +113,13 @@ uvx chapkit test --configs 2 --trainings 2 --predictions 5 --rows 250 --verbose
 ```
 
 !!! note "Assignment: a working model service"
-    - [ ] Scaffold a `shell-py` model and look at `scripts/train_model.py` / `predict_model.py`.
-    - [ ] `uv lock`, then `docker compose up --build`; confirm `/health` and open `/docs`.
-    - [ ] Run `uvx chapkit test --verbose` and get **ALL TESTS PASSED**.
+    - [ ] Scaffold a `shell-py` model and read `scripts/train_model.py` / `predict_model.py`.
+    - [ ] Make **one observable change** to the prediction logic - e.g. in `predict_model.py`
+      forecast the target's mean scaled by a constant, or a fixed value - so the output is
+      clearly yours, not the untouched example.
+    - [ ] `uv lock`, then `docker compose up -d --build`; confirm `/health` and open `/docs`.
+    - [ ] Run `uvx chapkit test --verbose`, get **ALL TESTS PASSED**, and confirm the predicted
+      `sample_0` values reflect your change.
 
 ## What's next
 

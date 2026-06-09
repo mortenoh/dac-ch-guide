@@ -24,7 +24,7 @@ same Laos climate demo database, you can copy these exact values.
 | | |
 |---|---|
 | **Model** | CHAP-EWARS Model (chapkit) |
-| **Configured-model id** | `12` (name `chapkit-ewars-model`) |
+| **Configured model** | `chapkit-ewars-model` - always refer to it by this **canonical name**; the numeric id (e.g. `12`) is assigned by your database and differs per install |
 | **What it is** | A Bayesian hierarchical model (WHO EWARS) implemented with INLA, packaged as a chapkit model. |
 | **Target** | `disease_cases` |
 | **Required covariate** | `population` |
@@ -47,7 +47,7 @@ covariates. The model's features map to these DHIS2 data items:
 |---|---|
 | **Organisation units** | Province level (level 2) - all 18 provinces |
 | **Period range** | `2023-01` to `2024-12` (Monthly) |
-| **Prediction horizon** | 3 months (forecasts `2025-01` to `2025-03`) |
+| **Prediction horizon** | 3 months (the default `n_periods`; forecasts `2025-01` to `2025-03`) |
 
 ??? note "The 18 province org-unit IDs"
     ```

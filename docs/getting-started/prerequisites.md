@@ -70,10 +70,22 @@ the local DHIS2 and CHAP stack.
     docker run --rm hello-world
     ```
 
+    Then check memory and that the ports are free:
+
+    ```bash
+    # Docker memory (bytes) - want at least ~6 GB, i.e. 6000000000+
+    docker info --format '{{.MemTotal}}'
+
+    # Ports 8080 (DHIS2) and 8000 (CHAP) - no output means both are free
+    lsof -i :8080 -i :8000        # macOS / Linux / WSL
+    # or, if lsof is unavailable:
+    ss -tlnp 'sport = :8080 or sport = :8000'
+    ```
+
     - [ ] All four tools report a version.
     - [ ] `docker run --rm hello-world` prints "Hello from Docker!".
-    - [ ] Docker has at least 6 GB of memory available.
-    - [ ] Ports `8080` (DHIS2) and `8000` (CHAP) are free.
+    - [ ] `docker info` shows at least ~6 GB of memory (`MemTotal` >= `6000000000`).
+    - [ ] Ports `8080` (DHIS2) and `8000` (CHAP) are free (the checks above print nothing).
 
 ## Next step
 

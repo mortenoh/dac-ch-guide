@@ -31,14 +31,31 @@ dump you can read or `grep`, drop the `-Fc` and use a `.sql` name.
 
 ## Restore
 
-Restoring **replaces** the current contents - `--clean` drops the existing objects first:
+Restoring **replaces** the current contents, so do it with the **app stopped** - a live `chap`
+or `chap-worker` holds connections that can block the drop and can write stale state back
+mid-restore. Stop the app (leave the database service running), recreate an empty database,
+then load the dump into it:
 
 ```bash
+# 1. stop the app so nothing holds the database open
+docker compose -f compose.chap.yml stop chap chap-worker
+
+# 2. drop and recreate an empty database (--force terminates any leftover connections)
+docker compose -f compose.chap.yml exec -T chap-postgres dropdb   -U chap --force chap_core
+docker compose -f compose.chap.yml exec -T chap-postgres createdb -U chap chap_core
+
+# 3. restore into the empty database
 cat chap_core.dump | docker compose -f compose.chap.yml exec -T chap-postgres \
-  pg_restore -U chap -d chap_core --clean --if-exists
+  pg_restore -U chap -d chap_core
+
+# 4. start the app and confirm it is healthy
+docker compose -f compose.chap.yml up -d chap chap-worker
+curl -s -u admin:district "http://localhost:8080/api/routes/chap/run/health" | jq
 ```
 
-The DHIS2 database is the same with `dhis2-db` and `-U dhis -d dhis`.
+Recreating the database (rather than `pg_restore --clean` into the live one) guarantees a clean
+result: no objects that were added *after* the dump survive. The DHIS2 database is the same idea
+with `dhis2-db`, `-U dhis`, and `dhis` - stop the `dhis2-web` service first.
 
 !!! tip "Test a dump before you trust it"
     To check a dump is good without touching live data, restore it into a throwaway database
@@ -68,9 +85,13 @@ is `postgres` and the compose flags differ:
 docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres \
   pg_dump -U chap -Fc chap_core > chap_core.dump
 
-# restore
+# restore (stop the app, recreate the database, then load the dump)
+docker compose -f compose.yml -f compose.chapkit.yml stop chap chap-worker
+docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres dropdb   -U chap --force chap_core
+docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres createdb -U chap chap_core
 cat chap_core.dump | docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres \
-  pg_restore -U chap -d chap_core --clean --if-exists
+  pg_restore -U chap -d chap_core
+docker compose -f compose.yml -f compose.chapkit.yml up -d chap chap-worker
 ```
 
 !!! note "Assignment: a dump you can trust"

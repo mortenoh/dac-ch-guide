@@ -1,8 +1,9 @@
 # DAC Climate and Health
 
 Build a local **DHIS2 + CHAP** environment, run an evaluation and prediction, then inspect
-and extend the workflow. The guide has one main route with a single choice: use released CHAP
-images for the quickest setup, or build CHAP from source for development.
+and extend the workflow. The core path (steps 1-6) has a single choice that does not change the
+rest: use released CHAP images for the quickest setup, or build CHAP from source. The optional
+**modeller track** (step 7, building your own model) needs the source setup.
 
 ## Follow the workshop
 
@@ -18,6 +19,8 @@ images for the quickest setup, or build CHAP from source for development.
    app or through the API.
 6. **[Configure a model](modelling/configured-models-curl.md)** - Create an EWARS variant and
    run it with the same workflow.
+7. **[Build a model](modelling/chapkit-scaffold.md)** *(optional, modeller track)* - Scaffold
+   your own CHAP model with chapkit and register it. Needs the **source setup** from step 3.
 
 Each step starts with its prerequisites and ends with a link to the next step. Assignment
 boxes mark the checks that should pass before you move on.

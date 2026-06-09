@@ -73,11 +73,16 @@ docker compose -f compose.chap.yml up -d
 ```
 
 If the newer version had already migrated the database, the old version may not read it - then
-also **restore your dump**:
+also **restore your dump** into a recreated database, with the app stopped (see
+[Backup and restore](backup-restore.md#restore) for why):
 
 ```bash
+docker compose -f compose.chap.yml stop chap chap-worker
+docker compose -f compose.chap.yml exec -T chap-postgres dropdb   -U chap --force chap_core
+docker compose -f compose.chap.yml exec -T chap-postgres createdb -U chap chap_core
 cat chap_core_pre-upgrade.dump | docker compose -f compose.chap.yml exec -T chap-postgres \
-  pg_restore -U chap -d chap_core --clean --if-exists
+  pg_restore -U chap -d chap_core
+docker compose -f compose.chap.yml up -d chap chap-worker
 ```
 
 ## From-source CHAP (chap-core)

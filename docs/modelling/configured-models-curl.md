@@ -8,10 +8,11 @@ ready-to-run variant. The stock models you used earlier (like *CHAP-EWARS Model 
 configured models; here you create your own variant.
 
 !!! info "Why curl here"
-    The Modelling App has a **New model** screen for this, but at the time of writing it is
-    being updated to match a chap-core API change, so this guide uses the API directly. The UI
-    walkthrough will be added once the app fix lands. (Models you create over the API show up in
-    the app and can be used for evaluations and predictions straight away.)
+    The Modelling App also has a **New model** screen, but this guide configures the model over
+    the **API on purpose**: it is scriptable, shows exactly which template, options, and
+    covariates go into the request, and hands back the canonical name you run the model by.
+    Models created over the API appear in the app immediately and are usable for evaluations and
+    predictions straight away.
 
 We will build a variant of the chapkit EWARS model that turns on **region-specific seasonal
 effects** and uses the climate covariates. Reuse the connection from the

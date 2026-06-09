@@ -1,7 +1,9 @@
 # Choose how to run CHAP
 
 This is the only branch in the core setup. Pick **one** route; both end with DHIS2 connected
-to the same CHAP API, so the rest of the workshop is identical.
+to the same CHAP API, so the **core workshop (steps 4-6) is identical** either way. Only the
+optional modeller track ([step 7: build a model](../modelling/chapkit-scaffold.md)) needs the
+**source setup**, because it registers your model as a compose overlay on chap's own network.
 
 | Path | Choose it when | What runs |
 |------|----------------|-----------|

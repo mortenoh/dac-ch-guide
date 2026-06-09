@@ -4,7 +4,9 @@ Climate and health workshop guides for the **DHIS2 Annual Conference (DAC)**.
 
 The guides are built as a [MkDocs](https://www.mkdocs.org/) site using the
 [Material](https://squidfunk.github.io/mkdocs-material/) theme. Each guide is a short,
-hands-on walkthrough (around 5-6 minutes) with assignments to confirm your setup as you go.
+hands-on walkthrough - roughly 5-10 minutes of active work - with assignments to confirm your
+setup as you go. Waiting time is separate and can be substantial: image pulls, DHIS2 startup,
+analytics generation, model builds, and evaluations each take minutes on their own.
 
 ## Getting started
 
