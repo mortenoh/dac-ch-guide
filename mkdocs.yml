@@ -39,6 +39,8 @@ nav:
       - Overview: modelling/index.md
       - With the UI: modelling/with-ui.md
       - With curl: modelling/with-curl.md
+  - Configured models:
+      - With curl: modelling/configured-models-curl.md
 
 markdown_extensions:
   - admonition

@@ -97,7 +97,8 @@ curl -s -u admin:district \
     The default target is port `8000`. If your locally built CHAP uses another port, set it
     before starting DHIS2: `CHAP_ROUTE_URL=http://host.docker.internal:8001/** make start`.
     Or repoint the existing route by hand with a `PUT` to
-    `…/api/routes/<id>` carrying `{"name":"chap","code":"chap","url":"<your-url>/**"}`.
+    `…/api/routes/<id>` carrying `{"name":"chap","code":"chap","url":"<your-url>/**"}` (see the
+    DHIS2 [Route API](https://docs.dhis2.org/en/develop/using-the-api/dhis-core-version-242/route.html)).
 
 ## Step 5 - Test the connection end to end
 

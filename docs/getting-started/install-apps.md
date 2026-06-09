@@ -76,7 +76,8 @@ others) loaded straight from chap-core:
 ## Advanced: installing an app with curl
 
 The App Hub install is just an API call, so you can script it - useful for reproducible setups
-or headless servers. Find the app's latest version id, then `POST` to it:
+or headless servers (see the DHIS2 [apps / App Hub API](https://docs.dhis2.org/en/develop/using-the-api/dhis-core-version-242/apps.html)).
+Find the app's latest version id, then `POST` to it:
 
 ```bash
 # Find the latest version id for an app by name (e.g. "Modeling")

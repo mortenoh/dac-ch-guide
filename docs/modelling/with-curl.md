@@ -32,8 +32,8 @@ curl -s -u "$AUTH" "$CHAP/crud/configured-models" \
 ## Step 2 - Get the data from the analytics API
 
 The model needs the four data items across the 18 provinces and the 24 months. That is one
-call to the DHIS2 **analytics API**, with the `dx` (data), `ou` (org units), and `pe` (periods)
-dimensions:
+call to the DHIS2 [**analytics API**](https://docs.dhis2.org/en/develop/using-the-api/dhis-core-version-242/analytics.html),
+with the `dx` (data), `ou` (org units), and `pe` (periods) dimensions:
 
 ```bash
 OUS="W6sNfkJcXGC;YvLOmtTQD6b;XKGgynPS1WZ;rO2RVJWHpCe;FRmrFTE63D0;MBZYTqkEgwf;hdeC7uX9Cko;RdNV4tTRNEo;VWGSudnonm5;quFXhkOJGB4;vBWtCmNNnCG;c4HrGRJoarj;pFCZqWnXtoU;TOgZ99Jv0bN;dOhqCNenSjS;sv6c7CpPcrc;hRQsZhmvqgS;K27JzTKmBKh"
@@ -55,7 +55,8 @@ Each row is `[dataElement, orgUnit, period, value]`.
 
 ## Step 3 - Get the org-unit geometry
 
-The run also needs each province's polygon, which DHIS2 serves alongside the org units:
+The run also needs each province's polygon, which DHIS2 serves alongside the org units (see the
+[metadata / organisation units API](https://docs.dhis2.org/en/develop/using-the-api/dhis-core-version-242/metadata.html)):
 
 ```bash
 curl -s -u "$AUTH" \
