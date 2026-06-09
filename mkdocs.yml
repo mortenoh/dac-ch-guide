@@ -43,6 +43,9 @@ nav:
           - In the Modelling App: modelling/with-ui.md
           - Through the API: modelling/with-curl.md
       - 6. Configure a model: modelling/configured-models-curl.md
+      - 7. Build a model:
+          - Scaffold and run: modelling/chapkit-scaffold.md
+          - Register with CHAP: modelling/chapkit-register.md
   - Reference:
       - Find and diagnose failures: operations/logs.md
       - Inspect the databases: operations/database.md
