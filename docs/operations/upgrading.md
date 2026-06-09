@@ -12,8 +12,7 @@ guide, adapted to the stacks in these guides.)
 
 !!! warning "Back up before you upgrade"
     The upgrade migrates the database and migrations are one-way. Take a dump first - see
-    [Dump and restore](database.md#dump-and-restore) - so a failed or unwanted upgrade is
-    recoverable.
+    [Backup and restore](backup-restore.md) - so a failed or unwanted upgrade is recoverable.
 
 ## Bundled CHAP (docker-dhis2-core)
 

@@ -220,33 +220,6 @@ docker compose -f compose.chap.yml exec dhis2-db psql -U dhis -d dhis \
   -c "select count(*) from organisationunit;"
 ```
 
-## Dump and restore
-
-A `pg_dump` snapshot is your safety net - most importantly **before a chap-core update**, which
-may migrate the database. Take one first and you can roll back if the upgrade misbehaves.
-
-**Back up** the chap database to a file on your machine (custom, compressed format):
-
-```bash
-docker compose -f compose.chap.yml exec -T chap-postgres \
-  pg_dump -U chap -Fc chap_core > chap_core.dump
-```
-
-**Restore** it - this replaces the current contents (`--clean` drops the existing objects
-first):
-
-```bash
-cat chap_core.dump | docker compose -f compose.chap.yml exec -T chap-postgres \
-  pg_restore -U chap -d chap_core --clean --if-exists
-```
-
-The DHIS2 database is the same idea with `dhis2-db` and `-U dhis dhis`. In **pgAdmin** the same
-lives under **Tools -> Backup…** and **Tools -> Restore…**.
-
-!!! tip "Before you upgrade chap-core"
-    Dump first, then upgrade. If a new version's migration fails - or you simply want the old
-    data back - restore the dump. The upgrade guide (next) covers switching versions itself.
-
 !!! warning "Read, don't write"
     These are the live databases. Inspect freely with `SELECT`s, but do not hand-edit rows -
     changes bypass the application logic and can corrupt a run or your DHIS2 instance. To start
@@ -258,6 +231,5 @@ lives under **Tools -> Backup…** and **Tools -> Restore…**.
 
 ## What's next
 
-You can read the logs and the data behind a run. The last operational topic is **upgrading and
-restoring chap** - moving between versions without losing (or while deliberately resetting)
-that data.
+Now that you can see the data behind a run, the next step is keeping it safe -
+[Backup and restore](backup-restore.md) covers dumping and restoring these databases.
