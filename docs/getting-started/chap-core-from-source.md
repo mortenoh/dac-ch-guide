@@ -8,7 +8,7 @@
     yourself is what lets you add and change models.
 
 Here you clone the chap-core repository and build it with Docker Compose, layering in the
-**chapkit** model overlay. (You still run it in containers - you are building the image from
+**chapkit** models overlay. (You still run it in containers - you are building the image from
 the cloned code, not running Python by hand.) CHAP then runs as its own Compose project (not
 on DHIS2's network), so DHIS2 reaches it on the host - and `make start` already points the
 route there, so the two connect with no extra configuration.
@@ -34,7 +34,7 @@ cp .env.example .env
 
 The defaults in `.env` are fine for local use - you do not need to edit anything.
 
-## Step 2 - Start chap-core with the chapkit model
+## Step 2 - Start chap-core with the chapkit models
 
 ```bash
 docker compose -f compose.yml -f compose.chapkit.yml up -d --build
@@ -44,8 +44,9 @@ What each part means:
 
 - `compose.yml` - chap-core itself: the API, a background **worker** that runs models, a
   Redis broker, and a Postgres database.
-- `compose.chapkit.yml` - the chapkit model overlay. It adds the **EWARS** model service,
-  which registers itself with chap-core on startup.
+- `compose.chapkit.yml` - an umbrella overlay that pulls in the **chapkit-based model
+  services**. Today that is just **EWARS**; more chapkit models get added here over time. Each
+  one registers itself with chap-core on startup.
 - `--build` builds chap-core from the source in this folder. The **first** build takes a
   while; later starts are fast.
 
