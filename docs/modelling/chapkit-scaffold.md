@@ -118,8 +118,14 @@ uvx chapkit test --configs 2 --trainings 2 --predictions 5 --rows 250 --verbose
       forecast the target's mean scaled by a constant, or a fixed value - so the output is
       clearly yours, not the untouched example.
     - [ ] `uv lock`, then `docker compose up -d --build`; confirm `/health` and open `/docs`.
-    - [ ] Run `uvx chapkit test --verbose`, get **ALL TESTS PASSED**, and confirm the predicted
-      `sample_0` values reflect your change.
+    - [ ] Run `uvx chapkit test --verbose` and get **ALL TESTS PASSED** - the tester drives a
+      full config -> train -> predict cycle, so a pass means your changed predict code ran end
+      to end.
+
+!!! tip "Seeing your forecast values"
+    `chapkit test` confirms the cycle works but does not print the numbers. To eyeball the
+    actual `sample_0` values your change produces, use the interactive **`/docs`**: call the
+    train endpoint, then the predict endpoint, and read `sample_0` in the JSON response.
 
 ## What's next
 

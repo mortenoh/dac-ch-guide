@@ -29,6 +29,13 @@ docker compose -f compose.chap.yml exec chap-postgres psql -U chap -d chap_core
 docker compose -f compose.chap.yml exec dhis2-db psql -U dhis -d dhis
 ```
 
+If you run CHAP [from source](../getting-started/chap-core-from-source.md), the chap database
+service is `postgres` instead (DHIS2 is unchanged):
+
+```bash
+docker compose -f compose.yml -f compose.chapkit.yml exec postgres psql -U chap -d chap_core
+```
+
 At the prompt, `\dt` lists tables and `\q` quits. Run a one-off query without the prompt by
 adding `-c "<sql>"`.
 

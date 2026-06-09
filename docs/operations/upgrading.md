@@ -138,8 +138,17 @@ git checkout <previous-version>
 docker compose -f compose.yml -f compose.chapkit.yml up -d --build
 ```
 
-Restore the dump as well if the database was already migrated (same `pg_restore` command as the
-bundled path, with `postgres` as the service name).
+If the database was already migrated, restore the dump as well - same recreate-then-restore
+procedure as the bundled path, but with the **source** service names (`worker`, `postgres`):
+
+```bash
+docker compose -f compose.yml -f compose.chapkit.yml stop chap worker
+docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres dropdb   -U chap --force chap_core
+docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres createdb -U chap chap_core
+cat chap_core_pre-upgrade.dump | docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres \
+  pg_restore -U chap -d chap_core
+docker compose -f compose.yml -f compose.chapkit.yml up -d chap worker
+```
 
 !!! note "Version-specific notes (from the official guide)"
     - **v1.1.5+** needs a `.env` file - copy `.env.example`, but keep your existing PostgreSQL

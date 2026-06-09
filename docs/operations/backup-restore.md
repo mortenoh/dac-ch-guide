@@ -86,12 +86,13 @@ docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres \
   pg_dump -U chap -Fc chap_core > chap_core.dump
 
 # restore (stop the app, recreate the database, then load the dump)
-docker compose -f compose.yml -f compose.chapkit.yml stop chap chap-worker
+# note: the source stack names the services `worker` and `postgres` (not chap-worker/chap-postgres)
+docker compose -f compose.yml -f compose.chapkit.yml stop chap worker
 docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres dropdb   -U chap --force chap_core
 docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres createdb -U chap chap_core
 cat chap_core.dump | docker compose -f compose.yml -f compose.chapkit.yml exec -T postgres \
   pg_restore -U chap -d chap_core
-docker compose -f compose.yml -f compose.chapkit.yml up -d chap chap-worker
+docker compose -f compose.yml -f compose.chapkit.yml up -d chap worker
 ```
 
 !!! note "Assignment: a dump you can trust"

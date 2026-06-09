@@ -121,7 +121,7 @@ on a map.
 !!! note "Why three months"
     The **Predict...** form does not ask for a forecast length - the horizon defaults to
     **3 periods** (here 3 months), so you inherit it rather than setting it. The API exposes it
-    as `n_periods` if you script a run ([through the API](with-curl.md)).
+    as `nPeriods` if you script a run ([through the API](with-curl.md)).
 
 !!! tip "Importing predictions into DHIS2"
     The **Import** action on a prediction writes the forecast back into DHIS2 (as the CHAP

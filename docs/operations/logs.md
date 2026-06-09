@@ -80,8 +80,9 @@ docker compose -f compose.chap.yml logs -f dhis2-web     # DHIS2 itself
 
 !!! note "Assignment: read the logs"
     - [ ] Read the per-job log of your last evaluation or prediction.
-    - [ ] Tail `chap-worker` (`docker compose -f compose.chap.yml logs -f chap-worker`) while a
-      run is in progress and watch the model execute.
+    - [ ] Tail the worker while a run is in progress and watch the model execute - **bundled**:
+      `docker compose -f compose.chap.yml logs -f chap-worker`; **source**:
+      `docker compose -f compose.yml -f compose.chapkit.yml logs -f worker`.
 
 ## What's next
 
