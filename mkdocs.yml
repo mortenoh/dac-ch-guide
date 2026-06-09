@@ -41,6 +41,8 @@ nav:
       - With curl: modelling/with-curl.md
   - Configured models:
       - With curl: modelling/configured-models-curl.md
+  - Operations:
+      - Inspecting logs: operations/logs.md
 
 markdown_extensions:
   - admonition
