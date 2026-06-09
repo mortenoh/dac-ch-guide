@@ -1,10 +1,13 @@
 # Scaffold and run a chapkit model
 
 This is step 7a of the workshop, and the start of the **modeller** track: building your own
-model. Every CHAP model - including the EWARS model you have been using - is built with
-**chapkit**, a toolkit that turns your training and prediction code into a small web service
-that CHAP can run. Here you scaffold one, make it do something, run it, and test it - all on
-its own, before any chap-core wiring (that is [step 7b](chapkit-register.md)).
+model. CHAP can run models packaged in more than one way - many are defined declaratively with
+a config file (such as a `default.yml`) that points CHAP at the model's train/predict entry
+points, with no long-running service. **chapkit** is a different approach: a toolkit that turns
+your training and prediction code into a small web service that runs and self-registers with
+CHAP. The *CHAP-EWARS Model (chapkit)* you used earlier is built this way, and it is the
+approach this guide teaches. Here you scaffold one, make it do something, run it, and test it -
+all on its own, before any chap-core wiring (that is [step 7b](chapkit-register.md)).
 
 !!! note "Before you start"
     You need **Docker** (from [step 1](../getting-started/prerequisites.md)) and
