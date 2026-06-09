@@ -1,15 +1,19 @@
 # Run chap-core
 
+!!! abstract "Two ways to run chap-core - pick one"
+    This page is the **quick way**: pre-built images, bundled with the DHIS2 stack and wired up
+    for you. To build chap-core yourself - the path for **model development** - use
+    [Build chap-core](chap-core-from-source.md) instead. You only need one; either way you end
+    up with DHIS2 + chap-core connected.
+
 With DHIS2 running, you now add **chap-core** - the modelling engine - and connect the two so
 DHIS2 can send data to CHAP and read predictions back.
 
 You stay in the same `docker-dhis2-core` repository. One command starts chap-core alongside
-DHIS2 using **released CHAP images** and wires up the DHIS2 -> CHAP connection for you. (If you
-want to build chap-core from source instead - for model development - see
-[Run chap-core from source](chap-core-from-source.md).)
+DHIS2 using **released CHAP images** and wires up the DHIS2 -> CHAP connection for you.
 
 !!! note "Before you start"
-    You have completed [Start DHIS2 with Docker](start-dhis2.md). `make start-chap` runs the
+    You have completed [Run DHIS2](start-dhis2.md). `make start-chap` runs the
     *same* DHIS2 stack plus chap-core, so if `make start` is still running, stop it with
     `Ctrl+C` first - the next command replaces it.
 

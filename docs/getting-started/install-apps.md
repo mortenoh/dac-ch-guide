@@ -10,8 +10,9 @@ command line needed:
   guides).
 
 !!! note "Before you start"
-    DHIS2 is running. For the Modelling App, chap-core must be connected and the route healthy
-    - see [Run chap-core](add-chap-core.md). The Climate App works with DHIS2 alone.
+    DHIS2 is running, and chap-core is connected with the route healthy - whichever way you ran
+    it ([bundled](add-chap-core.md) or [from a clone](chap-core-from-source.md)). The Climate
+    App works with DHIS2 alone; the Modelling App needs the chap-core connection.
 
 ## Step 1 - Open the App Hub
 
