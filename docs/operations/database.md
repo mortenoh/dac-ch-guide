@@ -107,6 +107,108 @@ select id, name from configuredmodeldb order by id;
 Most of this is on the chap API too (`/v1/crud/backtests`, …), so reach for SQL when you need a
 join or an aggregate the API does not give you.
 
+## What a run writes to the database
+
+Running a model touches a precise set of tables. Measured on the
+[shared configuration](../modelling/index.md) (18 provinces × 24 months, 4 features), each
+operation first **snapshots its input data** (`dataset` + `observation`), then writes its own
+**outputs**:
+
+=== "An evaluation writes"
+    | Table | Rows added | What |
+    |-------|-----------:|------|
+    | `dataset` | **+1** | the data snapshot this run used |
+    | `observation` | **+1728** | every input value (4 features × 18 org units × 24 months) |
+    | `backtest` | **+1** | the evaluation itself - config and aggregate metrics |
+    | `backtestforecast` | **+378** | the predictions it scored (7 splits × 18 org units × 3 months) |
+
+=== "A prediction writes"
+    | Table | Rows added | What |
+    |-------|-----------:|------|
+    | `dataset` | **+1** | its own data snapshot |
+    | `observation` | **+1728** | the input values again |
+    | `prediction` | **+1** | the forecast itself |
+    | `predictionsamplesentry` | **+54** | the forecast values (18 org units × 3 months) |
+
+`backtestmetric` stays empty (the metrics live in `backtest.aggregate_metrics`), and
+`predictionsetup` is only written for **scheduled** predictions, not a one-off run.
+
+### The affected tables, column by column
+
+**`dataset`** - the input snapshot, one row per run:
+
+| Column | Meaning |
+|--------|---------|
+| `id` | primary key |
+| `name` | the run's name |
+| `type` | `evaluation` or `prediction` |
+| `period_type` | e.g. `month` |
+| `first_period` / `last_period` | the period range covered |
+| `org_units` | JSON array of org-unit ids |
+| `covariates` | JSON array of the model's feature names |
+| `data_sources` | JSON `[{covariate, dataElementId}]` - which DHIS2 data element backs each feature |
+| `geojson` | the org-unit polygons (a stringified `FeatureCollection`) |
+| `created` | timestamp |
+
+**`observation`** - the input values, many rows per dataset:
+
+| Column | Meaning |
+|--------|---------|
+| `id` | primary key |
+| `dataset_id` | → `dataset` |
+| `org_unit` / `period` | where / when |
+| `feature_name` | which feature (`disease_cases`, `population`, `rainfall`, `mean_temperature`) |
+| `value` | the number (`null` where the source had no value) |
+
+**`backtest`** - one row per evaluation:
+
+| Column | Meaning |
+|--------|---------|
+| `id` | primary key |
+| `name` | the run's name |
+| `model_id` | the configured model's canonical name |
+| `model_db_id` | → `configuredmodeldb` (its numeric id) |
+| `model_template_version` | the template version used |
+| `dataset_id` | → `dataset` (the data used) |
+| `org_units` | JSON array of evaluated org units |
+| `split_periods` | JSON array of the backtest cut points (where train/test was split) |
+| `aggregate_metrics` | JSON of the computed metrics (`mae`, `rmse`, `crps`, `coverage_*`, …) |
+| `created` | timestamp |
+
+**`backtestforecast`** - the evaluation's predictions to score, many rows per backtest:
+
+| Column | Meaning |
+|--------|---------|
+| `id` | primary key |
+| `backtest_id` | → `backtest` |
+| `org_unit` / `period` | where / when the prediction is for |
+| `values` | JSON of the predicted quantiles/samples |
+| `last_train_period` | the last period the model trained on (the split) |
+| `last_seen_period` | the last period it had data for |
+
+**`prediction`** - one row per forecast:
+
+| Column | Meaning |
+|--------|---------|
+| `id` | primary key |
+| `name` | the run's name |
+| `model_id` / `model_db_id` | the model used |
+| `dataset_id` | → `dataset` |
+| `n_periods` | how many future periods were forecast |
+| `org_units` | JSON array of org units |
+| `prediction_setup_id` | → `predictionsetup` if it came from a saved setup, else `null` |
+| `meta_data` | JSON metadata |
+| `created` | timestamp |
+
+**`predictionsamplesentry`** - the forecast values, many rows per prediction:
+
+| Column | Meaning |
+|--------|---------|
+| `id` | primary key |
+| `prediction_id` | → `prediction` |
+| `org_unit` / `period` | where / when |
+| `values` | JSON of the predicted samples for that location and future period |
+
 ## The DHIS2 database
 
 Same idea on port `15432`. DHIS2's schema is large and the **API is almost always the better
