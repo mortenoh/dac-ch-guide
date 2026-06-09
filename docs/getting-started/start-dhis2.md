@@ -4,13 +4,13 @@ In this guide you bring up a complete DHIS2 instance on your own machine using D
 comes pre-loaded with a **climate demo database** (Laos), so you have realistic data to model
 against in the later guides - no manual import needed.
 
-You will not install DHIS2, Java, or PostgreSQL by hand. A single `make` command starts
-everything: the DHIS2 web application, its database, a one-time data load, and the analytics
-tables that the Data Visualizer and the Modelling App rely on.
+You will not install DHIS2, Java, or PostgreSQL by hand. A single `docker compose` command
+starts everything: the DHIS2 web application, its database, a one-time data load, and the
+analytics tables that the Data Visualizer and the Modelling App rely on.
 
 !!! note "Before you start"
     Complete [Overview & Setup](../index.md) first - you need Docker, Docker Compose v2.20+,
-    `make`, and `git`, and Docker should have at least 6 GB of memory.
+    and `git`, and Docker should have at least 6 GB of memory.
 
 ## Step 1 - Get the setup repository
 
@@ -21,17 +21,22 @@ git clone https://github.com/dhis2-chap/docker-dhis2-core
 cd docker-dhis2-core
 ```
 
-This repository contains the Docker Compose files and a `Makefile` with the shortcuts used
-below. You do not need to edit anything to get started - every setting has a working default.
+This repository contains the Docker Compose files used below. You do not need to edit anything
+to get started - every setting has a working default. All the commands here are run from inside
+this folder.
 
 ## Step 2 - Start the stack
 
 ```bash
-make start
+docker compose up -d
 ```
 
-This runs in the **foreground** - leave the terminal open and watch the logs. Press
-`Ctrl+C` to stop (the containers stay and resume on the next `make start`).
+The `-d` runs it in the background. Follow the logs while it comes up (press `Ctrl+C` to stop
+following - that does not stop the stack):
+
+```bash
+docker compose logs -f
+```
 
 The **first** start does the most work:
 
@@ -43,16 +48,12 @@ The **first** start does the most work:
 First boot takes a few minutes. Later starts are much faster because the database is already
 loaded.
 
-!!! tip "Prefer a detached terminal?"
-    `make start` is `docker compose up` under the hood. To run it in the background instead,
-    use `docker compose up -d` and follow the logs with `make logs`.
-
 ## Step 3 - Watch it come up
 
-In another terminal (from the same folder), check container status:
+Check container status:
 
 ```bash
-make ps
+docker compose ps -a
 ```
 
 You are waiting for the web container to report **healthy** and the one-shot helpers
@@ -87,13 +88,13 @@ Log in with the demo credentials:
 - **Password:** `district`
 
 !!! note "Assignment: confirm DHIS2 is running"
-    - [ ] `make ps` shows `dhis2-web` as **Up (healthy)**.
+    - [ ] `docker compose ps -a` shows `dhis2-web` as **Up (healthy)**.
     - [ ] You can log in at `http://localhost:8080` with `admin` / `district`.
     - [ ] Open **Apps -> Data Visualizer** and confirm you can see organisation units and
       data - this means the demo database and analytics tables loaded correctly.
 
     If the page does not load yet, give it another minute (first boot is the slow one) and
-    check `make logs`.
+    check `docker compose logs -f`.
 
 ## What you should see
 
@@ -107,14 +108,24 @@ You should get DHIS2 version `2.42.x` back. The instance ships with a full organ
 hierarchy and climate-relevant data elements - everything CHAP needs to train and predict in
 the next guides.
 
+## Managing the stack
+
+```bash
+docker compose ps -a       # container status
+docker compose logs -f     # follow logs
+docker compose stop        # stop (keeps data; resume with `up -d`)
+docker compose down        # remove containers (keeps the database volume)
+docker compose down -v     # full reset: also wipe volumes (fresh dump + analytics next start)
+```
+
 ## Troubleshooting
 
 | Symptom | Likely cause / fix |
 |---------|--------------------|
-| Browser cannot reach `localhost:8080` | Web container still booting - wait and re-check `make ps`. |
-| `analytics` container shows `Exited (1)` | DHIS2 likely ran out of memory during the analytics build. Raise Docker's memory to 6-8 GB and re-run `make start`. |
-| Port `8080` already in use | Another service holds it. Stop that service, or start with a different port: `DHIS2_PORT=8081 make start`. |
-| Want a completely fresh start | `make start-force` wipes the volumes and reloads the dump + analytics from scratch. |
+| Browser cannot reach `localhost:8080` | Web container still booting - wait and re-check `docker compose ps -a`. |
+| `analytics` container shows `Exited (1)` | DHIS2 likely ran out of memory during the analytics build. Raise Docker's memory to 6-8 GB and re-run `docker compose up -d`. |
+| Port `8080` already in use | Another service holds it. Stop that service, or start with a different port: `DHIS2_PORT=8081 docker compose up -d`. |
+| Want a completely fresh start | `docker compose down -v` wipes the volumes; the next `docker compose up -d` reloads the dump + analytics from scratch. |
 
 ## What's next
 

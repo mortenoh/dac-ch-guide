@@ -52,7 +52,6 @@ part to do now - the rest of the guides assume these commands work.
 |------|-----|----------|
 | **Docker** | Runs DHIS2 and CHAP as containers. | `docker --version` |
 | **Docker Compose** v2.20+ | Orchestrates the multi-container stacks. The CHAP overlays use the `include` directive, which older `docker-compose` does not support. | `docker compose version` |
-| **make** | The guides drive the stacks with `make` shortcuts. | `make --version` |
 | **git** | To clone the setup repositories. | `git --version` |
 | **jq** | To read JSON from the DHIS2 and CHAP APIs in the `curl` examples. | `jq --version` |
 
@@ -60,8 +59,8 @@ part to do now - the rest of the guides assume these commands work.
 
 === "macOS"
     Install [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/)
-    (includes Docker Compose). `git` and `make` come with the Xcode command-line tools, and
-    `jq` is easiest via [Homebrew](https://brew.sh):
+    (includes Docker Compose). `git` comes with the Xcode command-line tools, and `jq` is
+    easiest via [Homebrew](https://brew.sh):
 
     ```bash
     xcode-select --install
@@ -74,7 +73,7 @@ part to do now - the rest of the guides assume these commands work.
     install the rest there:
 
     ```bash
-    sudo apt install git make jq
+    sudo apt install git jq
     ```
 
 === "Linux"
@@ -83,7 +82,7 @@ part to do now - the rest of the guides assume these commands work.
     package manager:
 
     ```bash
-    sudo apt install git make jq
+    sudo apt install git jq
     ```
 
 !!! tip "Can't install jq?"
@@ -98,7 +97,7 @@ part to do now - the rest of the guides assume these commands work.
     guides use `jq`, but any of these work.
 
 !!! warning "Windows users: work inside WSL 2"
-    Every command in these guides (`make`, `curl`, `psql`, ...) assumes a Unix-style shell.
+    Every command in these guides (`docker`, `curl`, `jq`, ...) assumes a Unix-style shell.
     On Windows, run them all from your **WSL 2 (Ubuntu)** terminal - not PowerShell or the
     Command Prompt. Clone the repositories *inside* WSL too (your Linux home, e.g.
     `~/dac`), not under `/mnt/c`, so Docker file sharing stays fast.
@@ -116,13 +115,12 @@ part to do now - the rest of the guides assume these commands work.
     ```bash
     docker --version          # Docker 24+ recommended
     docker compose version    # v2.20 or newer
-    make --version
     git --version
     jq --version
     docker run --rm hello-world   # confirms Docker can actually run a container
     ```
 
-    - [ ] All five tools report a version.
+    - [ ] All four tools report a version.
     - [ ] `docker run --rm hello-world` prints "Hello from Docker!".
     - [ ] Docker has at least 6 GB of memory available.
     - [ ] Ports `8080` (DHIS2) and `8000` (CHAP) are free on your machine.
