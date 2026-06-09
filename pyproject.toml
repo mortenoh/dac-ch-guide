@@ -1,7 +1,7 @@
 [project]
 name = "dac-guides"
 version = "0.1.0"
-description = "Guides for the DHIS2 Annual Conference (DAC) and its climate track"
+description = "Climate and health workshop guides for the DHIS2 Annual Conference"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [

@@ -1,5 +1,8 @@
 # Inspecting the database
 
+This is a reference page for understanding what CHAP stored. It is not a required workshop
+step.
+
 Two PostgreSQL databases sit behind the stack: **chap-core's** (models, runs, and the data
 they used) and **DHIS2's** (all DHIS2 metadata and data). The APIs are usually the better way
 in, but raw SQL is handy for digging into a run or answering a question the API does not.

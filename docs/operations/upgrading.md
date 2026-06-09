@@ -1,5 +1,7 @@
 # Upgrading and restoring chap
 
+This is a reference page for maintaining an existing setup, not part of the core workshop.
+
 chap-core is pinned to a specific version, so upgrading is a deliberate step. On start, a new
 version **migrates the chap database automatically** - which is convenient, but means you
 cannot simply downgrade afterwards. So the rule is: **back up first, then upgrade**, and keep

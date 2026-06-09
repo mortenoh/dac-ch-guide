@@ -1,5 +1,8 @@
 # Run DHIS2 with Docker
 
+This is step 2 of the workshop. It starts DHIS2 with the Laos climate demo database; CHAP is
+added in the next step.
+
 In this guide you bring up a complete DHIS2 instance on your own machine using Docker. It
 comes pre-loaded with a **climate demo database** (Laos), so you have realistic data to model
 against in the later guides - no manual import needed.
@@ -9,8 +12,8 @@ starts everything: the DHIS2 web application, its database, a one-time data load
 analytics tables that the Data Visualizer and the Modelling App rely on.
 
 !!! note "Before you start"
-    Complete [Overview & Setup](../index.md) first - you need Docker, Docker Compose v2.20+,
-    and `git`, and Docker should have at least 6 GB of memory.
+    Complete [step 1: prepare your machine](prerequisites.md). Docker and Docker Compose must
+    be installed and running.
 
 ## Step 1 - Get the setup repository
 
@@ -127,7 +130,6 @@ docker compose down -v     # full reset: also wipe volumes (fresh dump + analyti
 | Port `8080` already in use | Another service holds it. Stop that service, or start with a different port: `DHIS2_PORT=8081 docker compose up -d`. |
 | Want a completely fresh start | `docker compose down -v` wipes the volumes; the next `docker compose up -d` reloads the dump + analytics from scratch. |
 
-## What's next
+## Next step
 
-DHIS2 is running, but it cannot talk to CHAP yet. Next you will run **chap-core** and connect
-the two through a DHIS2 Route.
+Continue to [step 3: choose how to connect CHAP](chap-setup.md).

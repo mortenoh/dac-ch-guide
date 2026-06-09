@@ -1,6 +1,6 @@
-# DAC Guides
+# DAC Climate and Health
 
-Guides for the **DHIS2 Annual Conference (DAC)** and its **climate track**.
+Climate and health workshop guides for the **DHIS2 Annual Conference (DAC)**.
 
 The guides are built as a [MkDocs](https://www.mkdocs.org/) site using the
 [Material](https://squidfunk.github.io/mkdocs-material/) theme. Each guide is a short,

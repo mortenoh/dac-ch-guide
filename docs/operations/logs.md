@@ -1,5 +1,8 @@
 # Inspecting logs
 
+This is a reference page. Use it whenever a job is slow or fails; it is not a required step
+in the workshop.
+
 When an evaluation or prediction fails - or just takes longer than you expect - the logs tell
 you why. There are two levels:
 

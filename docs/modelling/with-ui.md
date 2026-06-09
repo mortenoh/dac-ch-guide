@@ -1,4 +1,4 @@
-# With the UI
+# Evaluate and predict in the Modelling App
 
 This walks through an **evaluation (backtest)** and then a **prediction** in the Modelling
 App, using the [shared configuration](index.md). Open the **Modeling** app from the DHIS2 apps
@@ -129,7 +129,8 @@ on a map.
     - [ ] Open it and confirm you see a forecast with prediction intervals for the coming
       months.
 
-## What's next
+## Next step
 
-You ran both an evaluation and a prediction by clicking through the app. Next, do the exact
-same run [with curl](with-curl.md) against the chap API - useful for scripting and automation.
+Continue to [step 6: configure a model](configured-models-curl.md). The
+[API walkthrough](with-curl.md) is an optional parallel version of this exercise for scripting
+and automation.

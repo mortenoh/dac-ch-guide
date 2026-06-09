@@ -1,5 +1,8 @@
 # Evaluation & prediction
 
+This is step 5 of the workshop. The configuration on this page is the single reference used
+by both walkthroughs, so switch between them without re-entering a different scenario.
+
 With DHIS2, chap-core, and the apps running, you can now put a model to work. There are two
 things you typically do with a model:
 
@@ -7,10 +10,10 @@ things you typically do with a model:
   to what actually happened, to see how well it performs.
 - **Predict** - run the model on the latest data to **forecast** the coming periods.
 
-This section walks through both, twice:
+Choose how you want to drive the same workflow:
 
-- **[With the UI](with-ui.md)** - using the Modelling App, clicking through the screens.
-- **[With curl](with-curl.md)** - the same run driven against the chap API through the DHIS2
+- **[In the Modelling App](with-ui.md)** - click through the screens.
+- **[Through the API](with-curl.md)** - drive the run against the CHAP API through the DHIS2
   route, so you can script it.
 
 Both use the **same configuration**, described below. Because everyone is working from the
@@ -79,7 +82,7 @@ with the pieces you will use:
     DHIS2 + chap-core are running and connected ([Run chap-core](../getting-started/add-chap-core.md)),
     and the **Modelling App** is installed ([Install the apps](../getting-started/install-apps.md)).
 
-## What's next
+## Choose a walkthrough
 
-Pick a path: drive it through the [Modelling App UI](with-ui.md), or do the same run
-[with curl](with-curl.md).
+Start with the [Modelling App walkthrough](with-ui.md) for the main workshop path. Use the
+[API walkthrough](with-curl.md) when you want to understand or automate the same requests.

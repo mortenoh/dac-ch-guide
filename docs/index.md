@@ -1,133 +1,55 @@
-# Overview & Setup
+# DAC Climate and Health
 
-Welcome to the hands-on guides for the **DHIS2 Annual Conference (DAC) climate track**.
+Build a local **DHIS2 + CHAP** environment, run an evaluation and prediction, then inspect
+and extend the workflow. The guide has one main route with a single choice: use released CHAP
+images for the quickest setup, or build CHAP from source for development.
 
-These guides take you from an empty machine to a working **DHIS2 + CHAP** setup that you
-can model with. They are built to be followed at your own pace during the session - read a
-step, do it, confirm it worked, move on.
+## Follow the workshop
 
-## What we are building
+1. **[Prepare your machine](getting-started/prerequisites.md)** - Install Docker, Git, and the
+   small command-line tools used in the exercises.
+2. **[Start DHIS2](getting-started/start-dhis2.md)** - Run the Laos climate demo database and
+   confirm that you can log in.
+3. **[Connect CHAP](getting-started/chap-setup.md)** - Choose the bundled or source setup and
+   verify the DHIS2 route.
+4. **[Install the apps](getting-started/install-apps.md)** - Add the Climate App and Modelling
+   App from the DHIS2 App Hub.
+5. **[Evaluate and predict](modelling/index.md)** - Use one shared Laos demo scenario in the
+   app or through the API.
+6. **[Configure a model](modelling/configured-models-curl.md)** - Create an EWARS variant and
+   run it with the same workflow.
 
-By the end of the getting-started guides you will have three pieces running locally and
-talking to each other:
+Each step starts with its prerequisites and ends with a link to the next step. Assignment
+boxes mark the checks that should pass before you move on.
 
-| Piece | What it is | How you reach it |
-|-------|------------|------------------|
-| **DHIS2** | The health information platform you already know, pre-loaded with a climate demo database. | Browser at `http://localhost:8080` |
-| **CHAP (chap-core)** | The modelling engine that trains models and produces predictions. | Through DHIS2 (it has no login of its own) |
-| **Modelling App** | The DHIS2 app where you run backtests and predictions against CHAP. | Inside DHIS2 |
+## Jump to a task
 
-DHIS2 never calls CHAP directly from your browser. Instead it proxies through a DHIS2
-**Route** - a small piece of config inside DHIS2 that forwards requests to CHAP. Setting up
-that route is one of the steps you will do yourself.
+| I need to... | Go to |
+|--------------|-------|
+| Complete the workshop with the fewest setup steps | [Quick CHAP setup](getting-started/add-chap-core.md) |
+| Build or change chap-core locally | [CHAP development setup](getting-started/chap-core-from-source.md) |
+| Run a model by clicking through the app | [Evaluate and predict in the UI](modelling/with-ui.md) |
+| Script a model run | [Evaluate and predict through the API](modelling/with-curl.md) |
+| Understand a failed or slow job | [Find and diagnose failures](operations/logs.md) |
+| Inspect what a run stored | [Inspect the databases](operations/database.md) |
+| Protect data before a change | [Back up and restore](operations/backup-restore.md) |
+| Upgrade CHAP or roll it back | [Upgrade or roll back CHAP](operations/upgrading.md) |
+
+## What you are building
+
+| Piece | Role | Where you use it |
+|-------|------|------------------|
+| **DHIS2** | Health information platform with the Laos climate demo data. | `http://localhost:8080` |
+| **CHAP** | Modelling engine that evaluates models and produces forecasts. | Through the DHIS2 `chap` route |
+| **Modelling App** | DHIS2 interface for configuring and running CHAP models. | Inside DHIS2 |
 
 ```mermaid
 flowchart LR
-    Browser["Your browser"] --> DHIS2["DHIS2 (:8080)"]
+    Browser["Browser or curl"] --> DHIS2["DHIS2 (:8080)"]
     DHIS2 -- "route: chap" --> CHAP["chap-core (:8000)"]
     CHAP --> Worker["worker + models"]
 ```
 
-## How these guides work
-
-Every guide follows the same rhythm:
-
-1. **Read the step** - a short explanation of what you are about to do and why.
-2. **Do the assignment** - the highlighted boxes are the parts you do yourself.
-3. **Confirm it worked** - check the result before moving on.
-
-!!! note "Assignment"
-    Assignment boxes look like this. When you see one, pause and complete it before
-    continuing - the later guides build on each step working.
-
-We run everything with **Docker**, so you do not install DHIS2, databases, or Python
-toolchains by hand. You only need a few base tools, below.
-
-## Prerequisites
-
-You need these installed before the first guide. If you have never used Docker, this is the
-part to do now - the rest of the guides assume these commands work.
-
-| Tool | Why | Check it |
-|------|-----|----------|
-| **Docker** | Runs DHIS2 and CHAP as containers. | `docker --version` |
-| **Docker Compose** v2.20+ | Orchestrates the multi-container stacks. The CHAP overlays use the `include` directive, which older `docker-compose` does not support. | `docker compose version` |
-| **git** | To clone the setup repositories. | `git --version` |
-| **jq** | To read JSON from the DHIS2 and CHAP APIs in the `curl` examples. | `jq --version` |
-
-### Installing the tools
-
-=== "macOS"
-    Install [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/)
-    (includes Docker Compose). `git` comes with the Xcode command-line tools, and `jq` is
-    easiest via [Homebrew](https://brew.sh):
-
-    ```bash
-    xcode-select --install
-    brew install jq
-    ```
-
-=== "Windows"
-    Install [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/)
-    with the WSL 2 backend. Run the guide commands from a **WSL 2 (Ubuntu)** terminal, and
-    install the rest there:
-
-    ```bash
-    sudo apt install git jq
-    ```
-
-=== "Linux"
-    Install [Docker Engine](https://docs.docker.com/engine/install/) and the
-    [Compose plugin](https://docs.docker.com/compose/install/linux/). The rest come from your
-    package manager:
-
-    ```bash
-    sudo apt install git jq
-    ```
-
-!!! tip "Can't install jq?"
-    `jq` only makes the JSON output easier to read. If you can't install it, pipe to Python
-    instead - it ships with most systems and pretty-prints JSON:
-
-    ```bash
-    curl -s http://localhost:8000/health | python3 -m json.tool
-    ```
-
-    For a quick check you can also just `grep` for a field, e.g. `... | grep status`. The
-    guides use `jq`, but any of these work.
-
-!!! warning "Windows users: work inside WSL 2"
-    Every command in these guides (`docker`, `curl`, `jq`, ...) assumes a Unix-style shell.
-    On Windows, run them all from your **WSL 2 (Ubuntu)** terminal - not PowerShell or the
-    Command Prompt. Clone the repositories *inside* WSL too (your Linux home, e.g.
-    `~/dac`), not under `/mnt/c`, so Docker file sharing stays fast.
-
-!!! tip "Give Docker enough memory"
-    DHIS2 plus CHAP needs a few GB of RAM. In Docker Desktop, raise the memory limit under
-    **Settings -> Resources** to at least **6-8 GB**. If a container is killed mid-startup,
-    this is usually why.
-
-## Confirm your setup
-
-!!! note "Assignment: verify the base tools"
-    Run each command and confirm you get a version back (exact numbers may differ):
-
-    ```bash
-    docker --version          # Docker 24+ recommended
-    docker compose version    # v2.20 or newer
-    git --version
-    jq --version
-    docker run --rm hello-world   # confirms Docker can actually run a container
-    ```
-
-    - [ ] All four tools report a version.
-    - [ ] `docker run --rm hello-world` prints "Hello from Docker!".
-    - [ ] Docker has at least 6 GB of memory available.
-    - [ ] Ports `8080` (DHIS2) and `8000` (CHAP) are free on your machine.
-
-    If anything fails here, flag it now - the next guide assumes all of this works.
-
-## What's next
-
-Next you will start DHIS2 with Docker and log in to the climate demo database, then bring up
-chap-core and connect the two. More guides are added here as the climate track takes shape.
+The Modelling App and API exercises use the same route, model, data mapping, periods, and
+organisation units. Those shared values live in one place:
+[Workflow and demo data](modelling/index.md).

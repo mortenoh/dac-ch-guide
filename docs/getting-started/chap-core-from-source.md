@@ -1,11 +1,8 @@
 # Build chap-core
 
-!!! abstract "When to use this"
-    Cloning the chap-core repository and building it with Docker Compose is how DHIS2 +
-    chap-core setups work today, and it is the path you use to **develop and run your own
-    models** on your laptop. The bundled [Run chap-core](add-chap-core.md) path is a quicker
-    way to get a working CHAP to try things out; building it yourself is what lets you add and
-    change models.
+This is the **development path** for step 3: build CHAP from a local clone so you can change
+chap-core or models. For the quicker alternative and its trade-offs, see
+[Choose how to run CHAP](chap-setup.md).
 
 Here you clone the chap-core repository and build it with Docker Compose, layering in the
 **chapkit** models overlay. (You still run it in containers - you are building the image from
@@ -134,7 +131,6 @@ chap-core you built**.
 | Port `8000` already in use | The bundled CHAP (`compose.chap.yml`) is still running. Stop it first - see the warning at the top. |
 | `platform does not match` warning | Harmless emulation notice on Apple-Silicon Macs (see Step 2). |
 
-## What's next
+## Next step
 
-You now have chap-core built from your own clone and connected to DHIS2 - the same end state as
-[Run chap-core](add-chap-core.md), but built from your own copy of the code.
+Continue to [step 4: install the DHIS2 apps](install-apps.md).

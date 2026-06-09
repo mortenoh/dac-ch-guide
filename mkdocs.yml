@@ -1,5 +1,5 @@
-site_name: DAC Guides
-site_description: Guides for the DHIS2 Annual Conference (DAC) and its climate track
+site_name: DAC Climate and Health
+site_description: Climate and health workshop guides for the DHIS2 Annual Conference
 site_url: https://dhis2-chap.github.io/dac-guides
 repo_url: https://github.com/dhis2-chap/dac-guides
 repo_name: dhis2-chap/dac-guides
@@ -20,6 +20,7 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
+    - navigation.indexes
     - navigation.sections
     - navigation.top
     - navigation.tracking
@@ -28,24 +29,25 @@ theme:
     - content.code.copy
 
 nav:
-  - Overview & Setup: index.md
-  - Getting Started:
-      - Run DHIS2: getting-started/start-dhis2.md
-      - Run chap-core:
-          - Bundled images: getting-started/add-chap-core.md
-          - From a clone: getting-started/chap-core-from-source.md
-      - Install the apps: getting-started/install-apps.md
-  - Evaluation & prediction:
-      - Overview: modelling/index.md
-      - With the UI: modelling/with-ui.md
-      - With curl: modelling/with-curl.md
-  - Configured models:
-      - With curl: modelling/configured-models-curl.md
-  - Operations:
-      - Inspecting logs: operations/logs.md
-      - Inspecting the database: operations/database.md
-      - Backup and restore: operations/backup-restore.md
-      - Upgrading and restoring chap: operations/upgrading.md
+  - Start here: index.md
+  - Workshop:
+      - 1. Prepare your machine: getting-started/prerequisites.md
+      - 2. Start DHIS2: getting-started/start-dhis2.md
+      - 3. Connect CHAP:
+          - Choose a setup: getting-started/chap-setup.md
+          - Quick setup (bundled): getting-started/add-chap-core.md
+          - Development setup (source): getting-started/chap-core-from-source.md
+      - 4. Install the apps: getting-started/install-apps.md
+      - 5. Evaluate and predict:
+          - Workflow and demo data: modelling/index.md
+          - In the Modelling App: modelling/with-ui.md
+          - Through the API: modelling/with-curl.md
+      - 6. Configure a model: modelling/configured-models-curl.md
+  - Reference:
+      - Find and diagnose failures: operations/logs.md
+      - Inspect the databases: operations/database.md
+      - Back up and restore: operations/backup-restore.md
+      - Upgrade or roll back CHAP: operations/upgrading.md
 
 markdown_extensions:
   - admonition

@@ -1,5 +1,8 @@
 # Backup and restore
 
+This is a reference page. Use it before an upgrade or any other change that could affect
+stored runs.
+
 The chap database holds everything you have produced - datasets, evaluations, predictions - so
 a `pg_dump` snapshot is worth taking before anything risky. The single most important moment is
 **before a chap-core upgrade**, which migrates the database in a way you cannot simply undo.

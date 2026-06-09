@@ -1,10 +1,7 @@
 # Run chap-core
 
-!!! abstract "Two ways to run chap-core - pick one"
-    This page is the **quick way**: pre-built images, bundled with the DHIS2 stack and wired up
-    for you. To build chap-core yourself - the path for **model development** - use
-    [Build chap-core](chap-core-from-source.md) instead. You only need one; either way you end
-    up with DHIS2 + chap-core connected.
+This is the **quick path** for step 3: use released images bundled with the DHIS2 stack. For
+the alternative and its trade-offs, see [Choose how to run CHAP](chap-setup.md).
 
 With DHIS2 running, you now add **chap-core** - the modelling engine - and connect the two so
 DHIS2 can send data to CHAP and read predictions back.
@@ -116,7 +113,6 @@ You should see `CHAP-EWARS Model (chapkit)`. You can also open the CHAP API docs
 | Port `8000` already in use | Another process holds it (a previous from-source CHAP, or your own server). Stop it, or change the port: `CHAP_PORT=8001 docker compose -f compose.chap.yml up -d`. |
 | Want a completely fresh start | `docker compose -f compose.chap.yml down -v` wipes all volumes (DHIS2 **and** chap); start again with `docker compose -f compose.chap.yml up -d`. |
 
-## What's next
+## Next step
 
-DHIS2 and CHAP are connected. Next you will install the DHIS2 apps - the **Climate App** and
-the **Modelling App** (which uses this CHAP connection) - and run your first backtest.
+Continue to [step 4: install the DHIS2 apps](install-apps.md).

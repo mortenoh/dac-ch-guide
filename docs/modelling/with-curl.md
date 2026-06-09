@@ -1,4 +1,4 @@
-# With curl
+# Evaluate and predict through the API
 
 Everything the Modelling App does, it does by calling APIs - so you can drive the same
 evaluation and prediction from the command line. This mirrors the [UI walkthrough](with-ui.md)
@@ -183,7 +183,7 @@ curl -fsS -u "$AUTH" "$CHAP/jobs/$PRED_JOB/prediction_result" \
     - [ ] Poll `…/jobs/$JOB_ID` to `"SUCCESS"` and read `…/jobs/$JOB_ID/evaluation_result`.
     - [ ] Create a prediction (`nPeriods: 3`) the same way and read its `prediction_result`.
 
-## What's next
+## Next step
 
-You have now run the full model workflow both ways - through the app and over the API. From
-here the climate track moves into configuring your own models and comparing them.
+Continue to [step 6: configure a model](configured-models-curl.md), or return to the
+[Modelling App walkthrough](with-ui.md) to see the same workflow in the UI.

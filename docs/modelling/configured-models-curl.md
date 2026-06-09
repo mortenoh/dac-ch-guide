@@ -1,4 +1,7 @@
-# Configure a model (curl)
+# Configure a model
+
+This is step 6 of the workshop. It changes the model configuration while reusing the
+evaluation and prediction workflow from step 5.
 
 A **configured model** is a **model template** plus a chosen set of **options** - a
 ready-to-run variant. The stock models you used earlier (like *CHAP-EWARS Model (chapkit)*) are
@@ -126,7 +129,8 @@ Run it exactly like the stock model - build a request as in the
     - [ ] Confirm it appears in `crud/configured-models`, then run an evaluation with that name
       as the `modelId`.
 
-## What's next
+## Where to go next
 
-You have a custom model variant. Next in the climate track: comparing models - run several
-variants over the same data and compare their metrics.
+You have completed the main workshop path. Run the custom variant with the
+[shared demo workflow](index.md), or jump to the [reference guides](../index.md#jump-to-a-task)
+to diagnose jobs, inspect stored results, back up data, or upgrade CHAP.
