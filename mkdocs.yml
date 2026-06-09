@@ -35,6 +35,10 @@ nav:
           - Bundled images: getting-started/add-chap-core.md
           - From a clone: getting-started/chap-core-from-source.md
       - Install the apps: getting-started/install-apps.md
+  - Evaluation & prediction:
+      - Overview: modelling/index.md
+      - With the UI: modelling/with-ui.md
+      - With curl: modelling/with-curl.md
 
 markdown_extensions:
   - admonition
