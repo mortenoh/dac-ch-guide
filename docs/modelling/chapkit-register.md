@@ -72,19 +72,26 @@ curl -fsS -u "$AUTH" "$CHAP/v1/crud/configured-models" \
 ```
 
 In the **Modelling App** it now appears in the model picker (Evaluate → New evaluation → Select
-model), right next to CHAP-EWARS.
+model), right next to CHAP-EWARS - with the metadata from your `MLServiceInfo`:
+
+![Your model in the Modelling App's model picker](img/chapkit-model-picker.png)
 
 ## Step 5 - Run it like any other model
 
 From here, nothing is special: evaluate or predict with it exactly as in the
-[API walkthrough](with-curl.md) (or in the app), setting the `modelId` to your model's name.
+[API walkthrough](with-curl.md) (or in the app), setting the `modelId` to your model's name. The
+result opens like any other - here the example model's flat line is its naive "predict the
+historical mean" forecast against the actual cases:
+
+![An evaluation run with your own model](img/chapkit-eval-result.png)
 
 !!! tip "Give the backtest a covariate"
-    A backtest predicts the target from **future covariate** values, so the data must include at
-    least one covariate (e.g. `population`), not only the target - otherwise there is nothing to
-    predict from. The scaffold's example model also just averages its numeric inputs, so expect
-    meaningless metrics until you put real logic in the scripts. That contrast is the point:
-    swap in your model and the same flow scores it.
+    A backtest predicts the target from **future covariate** values, so your model must declare
+    at least one covariate (`required_covariates=["population"]` in `MLServiceInfo`) and the data
+    must supply it - with only the target there is nothing to predict from. The scaffold's
+    example model also just averages its numeric inputs, so expect meaningless metrics until you
+    put real logic in the scripts. That contrast is the point: swap in your model and the same
+    flow scores it.
 
 !!! note "Sharing and lifecycle"
     - **Share it:** publish the image to a registry and use `image:` instead of `build:` in the
