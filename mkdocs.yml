@@ -1,8 +1,8 @@
 site_name: DAC Climate and Health
 site_description: Climate and health workshop guides for the DHIS2 Annual Conference
-site_url: https://dhis2-chap.github.io/dac-guides
-repo_url: https://github.com/dhis2-chap/dac-guides
-repo_name: dhis2-chap/dac-guides
+site_url: https://mortenoh.github.io/dac-ch-guide
+repo_url: https://github.com/mortenoh/dac-ch-guide
+repo_name: mortenoh/dac-ch-guide
 
 theme:
   name: material
@@ -76,8 +76,8 @@ markdown_extensions:
   - pymdownx.keys
   - pymdownx.magiclink:
       repo_url_shorthand: true
-      user: dhis2-chap
-      repo: dac-guides
+      user: mortenoh
+      repo: dac-ch-guide
   - pymdownx.mark
   - pymdownx.smartsymbols
   - pymdownx.superfences:
@@ -97,4 +97,4 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/dhis2-chap/dac-guides
+      link: https://github.com/mortenoh/dac-ch-guide
