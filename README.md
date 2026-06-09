@@ -10,7 +10,7 @@ hands-on walkthrough (around 5-6 minutes) with assignments to confirm your setup
 
 ```bash
 make install      # install dependencies with uv
-make docs-serve   # serve the docs locally at http://127.0.0.1:8000
+make docs-serve   # serve the docs locally at http://127.0.0.1:8765
 ```
 
 ## Common tasks

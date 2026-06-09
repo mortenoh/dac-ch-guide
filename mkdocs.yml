@@ -28,7 +28,12 @@ theme:
     - content.code.copy
 
 nav:
-  - Home: index.md
+  - Overview & Setup: index.md
+  - Getting Started:
+      - Run DHIS2: getting-started/start-dhis2.md
+      - Run chap-core: getting-started/add-chap-core.md
+      - Install the apps: getting-started/install-apps.md
+      - Build chap-core: getting-started/chap-core-from-source.md
 
 markdown_extensions:
   - admonition

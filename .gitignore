@@ -11,3 +11,6 @@ wheels/
 
 # MkDocs build output
 site/
+
+# Playwright MCP scratch output
+.playwright-mcp/

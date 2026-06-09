@@ -44,9 +44,12 @@ check:
 	@$(UV) run mypy .
 	@$(UV) run pyright
 
+# Port 8765 avoids clashing with the ports these guides use (DHIS2 8080, chap 8000).
+DOCS_PORT ?= 8765
+
 docs-serve:
-	@echo ">>> Serving documentation at http://127.0.0.1:8000"
-	@NO_MKDOCS_2_WARNING=1 $(UV) run mkdocs serve
+	@echo ">>> Serving documentation at http://127.0.0.1:$(DOCS_PORT)"
+	@NO_MKDOCS_2_WARNING=1 $(UV) run mkdocs serve --dev-addr 127.0.0.1:$(DOCS_PORT)
 
 docs-build:
 	@echo ">>> Building documentation site"
