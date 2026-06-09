@@ -79,7 +79,7 @@ with the pieces you will use:
 - `…/v1/jobs` - the running/finished jobs
 
 !!! note "Before you start"
-    DHIS2 + chap-core are running and connected ([Run chap-core](../getting-started/add-chap-core.md)),
+    DHIS2 + chap-core are running and connected ([Connect CHAP](../getting-started/chap-setup.md)),
     and the **Modelling App** is installed ([Install the apps](../getting-started/install-apps.md)).
 
 ## Choose a walkthrough

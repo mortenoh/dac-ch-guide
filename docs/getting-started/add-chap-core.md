@@ -1,4 +1,4 @@
-# Run chap-core
+# Quick setup (bundled)
 
 This is the **quick path** for step 3: use released images bundled with the DHIS2 stack. For
 the alternative and its trade-offs, see [Choose how to run CHAP](chap-setup.md).
@@ -11,7 +11,7 @@ adds chap-core on top of the DHIS2 stack using **released CHAP images** and wire
 DHIS2 -> CHAP connection for you.
 
 !!! note "Before you start"
-    You have completed [Run DHIS2](start-dhis2.md). `compose.chap.yml` includes the same DHIS2
+    You have completed [Start DHIS2](start-dhis2.md). `compose.chap.yml` includes the same DHIS2
     stack and adds chap to it, so running it just layers CHAP onto what is already up - you do
     not need to stop DHIS2 first.
 

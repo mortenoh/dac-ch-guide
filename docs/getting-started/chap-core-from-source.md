@@ -1,4 +1,4 @@
-# Build chap-core
+# Development setup (source)
 
 This is the **development path** for step 3: build CHAP from a local clone so you can change
 chap-core or models. For the quicker alternative and its trade-offs, see

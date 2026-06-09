@@ -64,14 +64,14 @@ others) loaded straight from chap-core:
     - [ ] The **Modelling App** opens, and its **Models** page lists models (e.g. CHAP-EWARS).
 
     If the Models page is empty or shows a connection error, the app cannot reach CHAP - go
-    back to [Run chap-core](add-chap-core.md) and confirm `…/api/routes/chap/run/health`
+    back to [Connect CHAP](chap-setup.md) and confirm `…/api/routes/chap/run/health`
     returns healthy.
 
 ## Troubleshooting
 
 | Symptom | Likely cause / fix |
 |---------|--------------------|
-| Modelling App shows no models or a connection error | CHAP is not reachable through the route. Re-check the route health (see [Run chap-core](add-chap-core.md)). |
+| Modelling App shows no models or a connection error | CHAP is not reachable through the route. Re-check the route health (see [Connect CHAP](chap-setup.md)). |
 | Modelling App is missing from the apps menu | Install did not complete, or your user lacks `F_CHAP_MODELING_APP`. Re-install and check the user role. |
 | App Hub list is empty | DHIS2 cannot reach the central App Hub. Check the machine's internet connection. |
 

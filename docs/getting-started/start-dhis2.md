@@ -1,4 +1,4 @@
-# Run DHIS2 with Docker
+# Start DHIS2
 
 This is step 2 of the workshop. It starts DHIS2 with the Laos climate demo database; CHAP is
 added in the next step.
@@ -75,7 +75,7 @@ docker-dhis2-core-chap-route-init-1   Exited (0)
 !!! note "What is `chap-route-init` doing here?"
     Even the DHIS2-only stack pre-configures the DHIS2 -> CHAP route so it is ready when you
     add CHAP later. You do not need CHAP running yet - this just points the route at where a
-    local CHAP would be. The [Run chap-core](add-chap-core.md) guide covers it.
+    local CHAP would be. The [Connect CHAP](chap-setup.md) step covers it.
 
 ## Step 4 - Log in
 
