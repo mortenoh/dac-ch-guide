@@ -44,6 +44,7 @@ nav:
   - Operations:
       - Inspecting logs: operations/logs.md
       - Inspecting the database: operations/database.md
+      - Upgrading and restoring chap: operations/upgrading.md
 
 markdown_extensions:
   - admonition
