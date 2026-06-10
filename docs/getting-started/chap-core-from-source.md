@@ -49,9 +49,10 @@ What each part means:
   while; later starts are fast.
 
 !!! tip "Apple Silicon (M1/M2/M3) Macs"
-    The CHAP images are built for `amd64`, so on an Apple-Silicon Mac Docker runs them under
-    emulation. You will see a `platform does not match` warning - it is harmless, things just
-    run a little slower.
+    chap-core itself builds for your machine's architecture. The amd64-only piece is the
+    **model image**: the bundled **EWARS** model (INLA/R) is published for `amd64`, so on an
+    Apple-Silicon Mac it runs under emulation - you will see a harmless `platform does not match`
+    warning, and it just runs a little slower.
 
 Handy commands while developing (from the chap-core folder). The
 `-f compose.yml -f compose.chapkit.yml` pair selects the same stack each time:

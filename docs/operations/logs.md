@@ -24,7 +24,8 @@ get the job id from the `POST` that created the run, or grab the most recent one
 ```bash
 JOB_ID=$(curl -fsS -u "$AUTH" "$CHAP/jobs" | jq -r 'sort_by(.start_time) | last | .id')
 
-curl -fsS -u "$AUTH" "$CHAP/jobs/$JOB_ID/logs"
+# the endpoint returns the log as a JSON string; jq -r renders the real newlines
+curl -fsS -u "$AUTH" "$CHAP/jobs/$JOB_ID/logs" | jq -r .
 ```
 
 ```text

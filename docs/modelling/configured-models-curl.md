@@ -106,15 +106,21 @@ curl -fsS -u "$AUTH" "$CHAP/crud/configured-models" \
 13   CHAP-EWARS Model (chapkit) [Ewars climate + region-seasonal]
 ```
 
-Run it exactly like the stock model - build a request as in the
-[evaluation curl page](with-curl.md), but set the `modelId` to this **canonical name**:
+Your variant now appears **everywhere the stock models do**, so run it however you ran step 5:
 
-```json
-"modelId": "chapkit-ewars-model:EWARS climate + region-seasonal"
-```
+- **In the Modelling App** - it shows up in the model picker (Evaluate -> New evaluation ->
+  Select model) under its display name *CHAP-EWARS Model (chapkit) [Ewars climate +
+  region-seasonal]*. Pick it and run it exactly as in the [UI walkthrough](with-ui.md) - no curl
+  needed.
+- **Through the API** - build a request as on the [evaluation curl page](with-curl.md), with the
+  `modelId` set to this **canonical name**:
+
+  ```json
+  "modelId": "chapkit-ewars-model:EWARS climate + region-seasonal"
+  ```
 
 !!! warning "modelId is a string, not the numeric id"
-    The run endpoints want the model's canonical **name**. Passing the numeric id (e.g. `13`)
+    The API run endpoints want the model's canonical **name**. Passing the numeric id (e.g. `13`)
     returns **HTTP 422** - use `$MODEL_NAME` from Step 2.
 
 !!! note "Where the predictions land"
@@ -127,8 +133,8 @@ Run it exactly like the stock model - build a request as in the
     - [ ] Resolve the `chapkit-ewars-model` template id by name.
     - [ ] Create a variant with `region_seasonal: true` and the climate covariates, capturing
       its canonical name.
-    - [ ] Confirm it appears in `crud/configured-models`, then run an evaluation with that name
-      as the `modelId`.
+    - [ ] Confirm it appears (in `crud/configured-models`, or the Modelling App's model picker),
+      then run an evaluation with it - in the app, or with its name as the `modelId` via the API.
 
 ## Where to go next
 

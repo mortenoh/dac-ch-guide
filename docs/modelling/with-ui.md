@@ -51,15 +51,18 @@ and map each one (see the [shared configuration](index.md) for the exact items):
 
 Click **Save**. The form now shows **All data items mapped**.
 
-### Step 6 - Start the run
+### Step 6 - Validate, then run
 
-Your form should look like this. Click **Start import**.
+Your form should look like this. First click **Start dry run** - a quick validation of the data
+and config that stores nothing. When it reports success, click **Start import** to run the
+evaluation for real and store the result.
 
 ![Completed evaluation form](img/eval-form-filled.png)
 
-!!! tip "Dry run vs import"
-    **Start import** runs the evaluation and stores the result. **Start dry run** is a quick
-    check that the data and config are valid without storing a full run.
+!!! tip "Why dry-run first"
+    **Start dry run** checks the data mapping and periods without the long model run; **Start
+    import** runs the evaluation and stores it. Dry-running first catches a mapping or period
+    mistake in seconds instead of after a multi-minute INLA run.
 
 ### Step 7 - Watch the job
 
@@ -82,6 +85,7 @@ the actual disease cases; use the location list to look at one province at a tim
 
 !!! note "Assignment: run an evaluation"
     - [ ] Create the evaluation with the configuration above.
+    - [ ] **Start dry run** first and confirm it succeeds, then **Start import**.
     - [ ] The job reaches **SUCCESS** on the Jobs page.
     - [ ] Open the result and confirm the chart shows predictions against actual cases.
 

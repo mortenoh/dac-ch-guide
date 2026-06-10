@@ -125,6 +125,9 @@ uvx chapkit test --configs 2 --trainings 2 --predictions 5 --rows 250 --verbose
     - [ ] Make **one observable change** to the prediction logic - e.g. in `predict_model.py`
       forecast the target's mean scaled by a constant, or a fixed value - so the output is
       clearly yours, not the untouched example.
+    - [ ] In `main.py`, declare at least one covariate in `MLServiceInfo`
+      (`required_covariates=["population"]`) - step 7b's evaluation predicts the target from a
+      future covariate, so a model with none cannot be backtested.
     - [ ] `uv lock`, then `docker compose up -d --build`; confirm `/health` and open `/docs`.
     - [ ] Run `uvx chapkit test --verbose` and get **ALL TESTS PASSED** - the tester drives a
       full config -> train -> predict cycle, so a pass means your changed predict code ran end
@@ -151,6 +154,14 @@ survives `docker compose restart` and `up`:
 docker compose exec my-model ls -lh data/chapkit.db
 ```
 
+That file lives **inside the container's volume**, not on your host. To read it with the CLI
+directly, copy it out first:
+
+```bash
+docker compose cp my-model:/work/data/chapkit.db ./chapkit.db
+uvx chapkit artifact list --database ./chapkit.db
+```
+
 Point `DATABASE_URL` at a different file - or at a hosted Postgres - to move that state
 elsewhere (for example when deploying next to chap-core).
 
@@ -160,11 +171,11 @@ Each training run stores a **model artifact**; each prediction stores a **predic
 linked to the model it came from (a parent -> child lineage). The hierarchy, artifact types, and
 retention are covered in chapkit's
 [Artifact Storage](https://dhis2-chap.github.io/chapkit/guides/artifact-storage/) guide. List
-what `chapkit test` produced - either from the live service or straight from the SQLite file:
+what `chapkit test` produced against the running service (or from a copied-out db file, as
+above):
 
 ```bash
-uvx chapkit artifact list --url http://localhost:9090     # via the running service
-uvx chapkit artifact list --database data/chapkit.db      # straight from the db file
+uvx chapkit artifact list --url http://localhost:9090
 ```
 
 Filter by type, and download a run's full **workspace** (its inputs, scripts, logs, and outputs)
