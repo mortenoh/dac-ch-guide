@@ -55,25 +55,31 @@ started in [Connect CHAP](../getting-started/add-chap-core.md) - it sees every s
 including the `chap-ewars` model:
 
 ```bash
-docker compose -f compose.chapkit.yml logs -f chap-worker   # runs the models (INLA/R) — tracebacks land here
+docker compose -f compose.chapkit.yml logs -f chap-ewars    # the EWARS model itself (INLA/R) — model errors and R tracebacks land here
+docker compose -f compose.chapkit.yml logs -f chap-worker   # orchestrates the run: queues the job, calls the model's train/predict
 docker compose -f compose.chapkit.yml logs -f chap          # the chap-core API
-docker compose -f compose.chapkit.yml logs -f chap-ewars    # the chapkit EWARS model service
 docker compose -f compose.chapkit.yml logs -f dhis2-web     # DHIS2 itself
 ```
 
-- **chap-worker** is the one to watch for model failures - it executes the model and logs the
-  stack trace.
+- **chap-ewars** is where the model actually runs. The chapkit EWARS model executes INLA/R inside
+  its own container, so a model that errors or produces bad output shows its **R traceback here** -
+  look here first for model-level failures.
+- **chap-worker** *orchestrates* the run (a Celery task that picks up the job, calls the model's
+  `$train` / `$predict` over HTTP, and assembles the result). A model failure surfaces here only
+  as a failed call or a failed job status; the detail is in `chap-ewars`. Watch it to follow a
+  run's progress or to catch queue/orchestration problems.
 - `--tail=50` limits the output, `-f` follows it live; drop both for the full history.
-- Tail several at once: `docker compose -f compose.chapkit.yml logs -f chap chap-worker`.
+- Tail both together: `docker compose -f compose.chapkit.yml logs -f chap-ewars chap-worker`.
 - `chap-ewars` is defined in the `compose.ewars.yml` overlay, so it only shows up under the
   `compose.chapkit.yml` umbrella - `-f compose.chap.yml` (chap-core only) does not know it.
 
 !!! note "Running chap from source?"
     The [from-source stack](../getting-started/chap-core-from-source.md) uses different file
-    flags and service names. From the **chap-core** folder the worker is just `worker`:
+    flags and service names. From the **chap-core** folder the model service is `ewars` and the
+    worker is just `worker`:
 
     ```bash
-    docker compose -f compose.yml -f compose.chapkit.yml logs -f worker
+    docker compose -f compose.yml -f compose.chapkit.yml logs -f ewars worker
     ```
 
 ## A debugging recipe
@@ -81,13 +87,15 @@ docker compose -f compose.chapkit.yml logs -f dhis2-web     # DHIS2 itself
 1. Find the failing run's **job id** (the create response, or `…/jobs`).
 2. `curl …/jobs/$JOB_ID` - is the status a failure rather than `SUCCESS`?
 3. `curl …/jobs/$JOB_ID/logs` - what did the model say, and at which step did it stop?
-4. Still unclear - `docker compose -f compose.chapkit.yml logs chap-worker` for the full traceback.
+4. Still unclear - `docker compose -f compose.chapkit.yml logs chap-ewars` for the model's own
+   traceback (INLA/R), and `chap-worker` for the orchestration around it.
 
 !!! note "Assignment: read the logs"
     - [ ] Read the per-job log of your last evaluation or prediction.
-    - [ ] Tail the worker while a run is in progress and watch the model execute - **bundled**:
-      `docker compose -f compose.chapkit.yml logs -f chap-worker`; **source**:
-      `docker compose -f compose.yml -f compose.chapkit.yml logs -f worker`.
+    - [ ] Tail the model and the worker while a run is in progress and watch it execute - the
+      model runs in **chap-ewars**, the worker orchestrates. **Bundled**:
+      `docker compose -f compose.chapkit.yml logs -f chap-ewars chap-worker`; **source**:
+      `docker compose -f compose.yml -f compose.chapkit.yml logs -f ewars worker`.
 
 ## What's next
 

@@ -122,10 +122,11 @@ You should see `CHAP-EWARS Model (chapkit)`. You can also open the CHAP API docs
     Modelling App.
 
 !!! tip "`make` shortcuts"
-    The repository wraps these overlays in Makefile targets: `make start-chapkit` is the
-    `docker compose -f compose.chapkit.yml up` used here, `make start-chap` is the chap-only
-    layer, and `make ps` / `make logs` / `make clean` manage the running stack. The guides spell
-    out the `docker compose` commands so you can see what each target runs.
+    The repository wraps these overlays in Makefile targets: **`make start-chap`** is the
+    `docker compose -f compose.chapkit.yml up` used here (DHIS2 + chap-core + the EWARS model),
+    while `make start` brings up DHIS2 on its own, and `make ps` / `make logs` / `make clean`
+    manage the running stack. The guides spell out the `docker compose` commands so you can see
+    what each target runs.
 
 ## Troubleshooting
 

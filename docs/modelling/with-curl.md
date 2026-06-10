@@ -184,21 +184,30 @@ echo "$BACKTEST_ID"
 
 ### Step 2 - Create the prediction setup
 
-`POST` the backtest id and a name. The setup **inherits the model, organisation units, periods,
-and data mapping** from the backtest, so you do not re-send any of that:
+`POST` the backtest id and a name; the setup **inherits the model, organisation units, periods,
+and data mapping** from the backtest, so you do not re-send any of that. A backtest can have only
+**one** setup, so reuse an existing one if there is one and create only when there is not - this
+makes the block safe to re-run:
 
 ```bash
-SETUP_ID=$(curl -fsS -u "$AUTH" -X POST "$CHAP/crud/prediction-setups" \
-  -H 'Content-Type: application/json' \
-  -d "{\"backtestId\": $BACKTEST_ID, \"name\": \"EWARS - Laos provinces 2023-2024\"}" \
-  | jq -r '.id')
+# reuse the setup for this backtest if it exists...
+SETUP_ID=$(curl -fsS -u "$AUTH" "$CHAP/crud/prediction-setups" \
+  | jq -r --argjson b "$BACKTEST_ID" 'map(select(.backtestId == $b))[0].id // empty')
+
+# ...otherwise create it
+if [ -z "$SETUP_ID" ]; then
+  SETUP_ID=$(curl -fsS -u "$AUTH" -X POST "$CHAP/crud/prediction-setups" \
+    -H 'Content-Type: application/json' \
+    -d "{\"backtestId\": $BACKTEST_ID, \"name\": \"EWARS - Laos provinces 2023-2024\"}" \
+    | jq -r '.id')
+fi
 echo "$SETUP_ID"
 ```
 
-!!! note "One setup per backtest"
-    A backtest can have only one setup - creating a second for the same backtest returns
-    **HTTP 409**. If you hit it, list the existing ones and reuse the id:
-    `curl -fsS -u "$AUTH" "$CHAP/crud/prediction-setups" | jq -r '.[] | "\(.id)\t\(.name)"'`.
+!!! note "Why look up first"
+    A bare `POST` for a backtest that **already** has a setup returns **HTTP 409**, and with
+    `curl -fsS` that leaves `$SETUP_ID` empty - which then breaks the run below. The lookup above
+    avoids that by resolving the existing setup (by its `backtestId`) before creating one.
 
 ### Step 3 - Run a forecast from the setup
 
