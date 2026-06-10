@@ -1,0 +1,69 @@
+/* A little more content width than Material's default 61rem, so wide screens
+   have less empty margin. */
+.md-grid {
+  max-width: 70rem;
+}
+
+/* Grid cards: keep a clearly visible border; on hover darken the background a
+   touch and switch the border to the accent colour. */
+.md-typeset .grid.cards > :is(ul, ol) > li {
+  display: flex;
+  flex-direction: column;
+  border-color: var(--md-default-fg-color--lighter);
+  transition: border-color 250ms, box-shadow 250ms, background-color 250ms;
+}
+
+.md-typeset .grid.cards > :is(ul, ol) > li:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-color: var(--md-accent-fg-color);
+}
+
+/* Pin the call-to-action link (the last element) to the bottom of the card so
+   links line up across cards regardless of how long each description is. */
+.md-typeset .grid.cards > :is(ul, ol) > li > :last-child {
+  margin-top: auto;
+}
+
+/* Make the whole card clickable: stretch the bottom link to cover the card, so
+   a click anywhere on the box follows it (the visible link still shows where). */
+.md-typeset .grid.cards > :is(ul, ol) > li {
+  position: relative;
+}
+
+.md-typeset .grid.cards > :is(ul, ol) > li > :last-child a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* ---- Sidebar navigation ---------------------------------------------------
+   A clearer "clickable" sidebar: hover highlight on every nav link and a
+   boxed highlight on the current page, plus a touch more room around groups. */
+/* :not(.md-nav__container) skips the flex wrapper that section-index rows add
+   (it carries the md-nav__link class too) so the box is not drawn twice. */
+.md-nav__link:not(.md-nav__container) {
+  border-radius: 0.2rem;
+  padding: 0.3rem 0.5rem;
+  transition: background-color 125ms, color 125ms;
+}
+
+.md-nav__link:not(.md-nav__container):hover {
+  background-color: var(--md-default-fg-color--lightest);
+  color: var(--md-default-fg-color);
+}
+
+/* Current page: a soft box rather than just coloured text. */
+.md-nav__link--active:not(.md-nav__container) {
+  background-color: var(--md-default-fg-color--lightest);
+  font-weight: 600;
+}
+
+/* Section labels (Workshop, Reference): a bit more separation between groups. */
+.md-nav__item--section {
+  margin-top: 1em;
+}
+
+.md-nav__item--section > .md-nav__link {
+  color: var(--md-default-fg-color);
+  font-weight: 700;
+}
