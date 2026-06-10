@@ -44,7 +44,9 @@ nav:
           - Overview and demo data: modelling/index.md
           - In the Modelling App: modelling/with-ui.md
           - Through the API: modelling/with-curl.md
-      - 7. Configure a model: modelling/configured-models-curl.md
+      - 7. Configure a model:
+          - In the Modelling App: modelling/configured-models-ui.md
+          - Through the API: modelling/configured-models-curl.md
       - 8. Build a model:
           - Scaffold and run: modelling/chapkit-scaffold.md
           - Register with CHAP: modelling/chapkit-register.md

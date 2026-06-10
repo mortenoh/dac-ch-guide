@@ -63,7 +63,7 @@ released CHAP images for the quickest setup, or build CHAP from source. The **mo
 
     Create an EWARS variant and run it with the same workflow.
 
-    [:octicons-arrow-right-24: Configure](modelling/configured-models-curl.md)
+    [:octicons-arrow-right-24: Configure](modelling/configured-models-ui.md)
 
 -   :material-hammer-wrench:{ .lg .middle } &nbsp;__8. Build a model__
 

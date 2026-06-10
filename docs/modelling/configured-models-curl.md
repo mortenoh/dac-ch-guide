@@ -1,11 +1,12 @@
-# Configure a model
+# Configure a model through the API
 
 This is step 7 of the workshop. It changes the model configuration while reusing the
 evaluation and prediction workflow from step 6.
 
 A **configured model** is a **model template** plus a chosen set of **options** - a
 ready-to-run variant. The stock models you used earlier (like *CHAP-EWARS Model (chapkit)*) are
-configured models; here you create your own variant.
+configured models; here you create your own variant. This is the curl version of
+[configure a model in the Modelling App](configured-models-ui.md) - same variant, same result.
 
 !!! note "Before you start"
     DHIS2 + chap-core are running and connected ([step 5](../getting-started/install-apps.md)),
@@ -13,11 +14,11 @@ configured models; here you create your own variant.
     familiar. You need **`curl`** and **`jq`** (from [step 1](../getting-started/prerequisites.md)).
 
 !!! info "Why curl here"
-    The Modelling App also has a **New model** screen, but this guide configures the model over
-    the **API on purpose**: it is scriptable, shows exactly which template, options, and
-    covariates go into the request, and hands back the canonical name you run the model by.
-    Models created over the API appear in the app immediately and are usable for evaluations and
-    predictions straight away.
+    The [Modelling App version](configured-models-ui.md) clicks through the **New model** screen;
+    this page does the same over the **API**, which is scriptable, shows exactly which template,
+    options, and covariates go into the request, and hands back the canonical name you run the
+    model by. Either way the model appears in the app immediately and is usable for evaluations
+    and predictions straight away.
 
 We will build a variant of the chapkit EWARS model that turns on **region-specific seasonal
 effects** and uses the climate covariates. Reuse the connection from the

@@ -162,6 +162,6 @@ intervals** - for the coming 3 months.
 
 ## Next step
 
-Continue to [step 7: configure a model](configured-models-curl.md). The
+Continue to [step 7: configure a model](configured-models-ui.md). The
 [API walkthrough](with-curl.md) is a parallel version of this exercise for scripting and
 automation.
