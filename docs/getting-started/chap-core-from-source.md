@@ -11,8 +11,8 @@ on DHIS2's network), so DHIS2 reaches it on the host - and DHIS2's `chap-route-i
 points the route there, so the two connect with no extra configuration.
 
 !!! warning "Do not run both CHAP setups at once"
-    The bundled CHAP (`compose.chap.yml`) and this locally built CHAP both use port `8000`. Run
-    only one. If the bundled stack is up, drop CHAP and keep DHIS2 with
+    The bundled CHAP (`compose.chapkit.yml`) and this locally built CHAP both use port `8000`.
+    Run only one. If the bundled stack is up, drop CHAP and keep DHIS2 with
     `docker compose up -d --remove-orphans` (in `docker-dhis2-core`) before bringing up the
     locally built CHAP here.
 
@@ -128,8 +128,8 @@ chap-core you built**.
 | Symptom | Likely cause / fix |
 |---------|--------------------|
 | Proxy returns a connection error | chap-core is not running, or is on a different port. Check `docker compose -f compose.yml -f compose.chapkit.yml ps` and `curl http://localhost:8000/health`. |
-| Proxy points at `http://chap:8000` | The route was left targeting the bundled service by a previous bundled run (`compose.chap.yml`). Re-run `docker compose up -d` (DHIS2 only, in `docker-dhis2-core`) to repoint it back at `host.docker.internal:8000`. |
-| Port `8000` already in use | The bundled CHAP (`compose.chap.yml`) is still running. Stop it first - see the warning at the top. |
+| Proxy points at `http://chap:8000` | The route was left targeting the bundled service by a previous bundled run (`compose.chapkit.yml`). Re-run `docker compose up -d` (DHIS2 only, in `docker-dhis2-core`) to repoint it back at `host.docker.internal:8000`. |
+| Port `8000` already in use | The bundled CHAP (`compose.chapkit.yml`) is still running. Stop it first - see the warning at the top. |
 | `platform does not match` warning | Harmless emulation notice on Apple-Silicon Macs (see Step 2). |
 
 ## Next step

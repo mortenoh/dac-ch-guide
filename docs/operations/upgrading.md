@@ -18,16 +18,18 @@ guide, adapted to the stacks in these guides.)
 
 ## Bundled CHAP (docker-dhis2-core)
 
-You run CHAP with `docker compose -f compose.chap.yml …`, and the version lives in the image
-tags in `compose.chap.yml`.
+The chap-core version lives in the image tags in **`compose.chap.yml`** (the base chap stack -
+that is where the `chap` and `chap-worker` services are defined). You edit the tags there, but
+you run the stack through the **`compose.chapkit.yml`** umbrella so the EWARS model comes back
+up with the upgraded engine.
 
 ### Step 1 - Note the version and back up
 
 ```bash
-docker compose -f compose.chap.yml exec chap \
+docker compose -f compose.chapkit.yml exec chap \
   python -c 'import chap_core; print(chap_core.__version__)'
 
-docker compose -f compose.chap.yml exec -T chap-postgres \
+docker compose -f compose.chapkit.yml exec -T chap-postgres \
   pg_dump -U chap -Fc chap_core > chap_core_pre-upgrade.dump
 ```
 
@@ -49,8 +51,8 @@ Available versions are the tags on the
 ### Step 3 - Pull and recreate
 
 ```bash
-docker compose -f compose.chap.yml pull chap chap-worker
-docker compose -f compose.chap.yml up -d
+docker compose -f compose.chapkit.yml pull chap chap-worker
+docker compose -f compose.chapkit.yml up -d
 ```
 
 chap runs its database migrations on startup - no manual migration step is needed.
@@ -58,7 +60,7 @@ chap runs its database migrations on startup - no manual migration step is neede
 ### Step 4 - Verify
 
 ```bash
-docker compose -f compose.chap.yml exec chap \
+docker compose -f compose.chapkit.yml exec chap \
   python -c 'import chap_core; print(chap_core.__version__)'   # the new version
 curl -s -u admin:district "http://localhost:8080/api/routes/chap/run/health" | jq
 ```
@@ -68,8 +70,8 @@ curl -s -u admin:district "http://localhost:8080/api/routes/chap/run/health" | j
 Put the old tags back in `compose.chap.yml`, then:
 
 ```bash
-docker compose -f compose.chap.yml pull chap chap-worker
-docker compose -f compose.chap.yml up -d
+docker compose -f compose.chapkit.yml pull chap chap-worker
+docker compose -f compose.chapkit.yml up -d
 ```
 
 If the newer version had already migrated the database, the old version may not read it - then
@@ -77,12 +79,12 @@ also **restore your dump** into a recreated database, with the app stopped (see
 [Backup and restore](backup-restore.md#restore) for why):
 
 ```bash
-docker compose -f compose.chap.yml stop chap chap-worker
-docker compose -f compose.chap.yml exec -T chap-postgres dropdb   -U chap --force chap_core
-docker compose -f compose.chap.yml exec -T chap-postgres createdb -U chap chap_core
-cat chap_core_pre-upgrade.dump | docker compose -f compose.chap.yml exec -T chap-postgres \
+docker compose -f compose.chapkit.yml stop chap chap-worker
+docker compose -f compose.chapkit.yml exec -T chap-postgres dropdb   -U chap --force chap_core
+docker compose -f compose.chapkit.yml exec -T chap-postgres createdb -U chap chap_core
+cat chap_core_pre-upgrade.dump | docker compose -f compose.chapkit.yml exec -T chap-postgres \
   pg_restore -U chap -d chap_core
-docker compose -f compose.chap.yml up -d chap chap-worker
+docker compose -f compose.chapkit.yml up -d chap chap-worker
 ```
 
 ## From-source CHAP (chap-core)

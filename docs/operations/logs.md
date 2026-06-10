@@ -50,19 +50,23 @@ curl -fsS -u "$AUTH" "$CHAP/jobs/$JOB_ID"     # "SUCCESS", "STARTED", or a failu
 
 A run spans several containers. When the job log is not enough - for example the worker died
 before it could log - look at the containers with `docker compose`. From the
-**docker-dhis2-core** folder (the bundled stack):
+**docker-dhis2-core** folder (the bundled stack), use the `compose.chapkit.yml` umbrella you
+started in [Connect CHAP](../getting-started/add-chap-core.md) - it sees every service,
+including the `chap-ewars` model:
 
 ```bash
-docker compose -f compose.chap.yml logs -f chap-worker   # runs the models (INLA/R) — tracebacks land here
-docker compose -f compose.chap.yml logs -f chap          # the chap-core API
-docker compose -f compose.chap.yml logs -f chap-ewars    # the chapkit EWARS model service
-docker compose -f compose.chap.yml logs -f dhis2-web     # DHIS2 itself
+docker compose -f compose.chapkit.yml logs -f chap-worker   # runs the models (INLA/R) — tracebacks land here
+docker compose -f compose.chapkit.yml logs -f chap          # the chap-core API
+docker compose -f compose.chapkit.yml logs -f chap-ewars    # the chapkit EWARS model service
+docker compose -f compose.chapkit.yml logs -f dhis2-web     # DHIS2 itself
 ```
 
 - **chap-worker** is the one to watch for model failures - it executes the model and logs the
   stack trace.
 - `--tail=50` limits the output, `-f` follows it live; drop both for the full history.
-- Tail several at once: `docker compose -f compose.chap.yml logs -f chap chap-worker`.
+- Tail several at once: `docker compose -f compose.chapkit.yml logs -f chap chap-worker`.
+- `chap-ewars` is defined in the `compose.ewars.yml` overlay, so it only shows up under the
+  `compose.chapkit.yml` umbrella - `-f compose.chap.yml` (chap-core only) does not know it.
 
 !!! note "Running chap from source?"
     The [from-source stack](../getting-started/chap-core-from-source.md) uses different file
@@ -77,12 +81,12 @@ docker compose -f compose.chap.yml logs -f dhis2-web     # DHIS2 itself
 1. Find the failing run's **job id** (the create response, or `…/jobs`).
 2. `curl …/jobs/$JOB_ID` - is the status a failure rather than `SUCCESS`?
 3. `curl …/jobs/$JOB_ID/logs` - what did the model say, and at which step did it stop?
-4. Still unclear - `docker compose -f compose.chap.yml logs chap-worker` for the full traceback.
+4. Still unclear - `docker compose -f compose.chapkit.yml logs chap-worker` for the full traceback.
 
 !!! note "Assignment: read the logs"
     - [ ] Read the per-job log of your last evaluation or prediction.
     - [ ] Tail the worker while a run is in progress and watch the model execute - **bundled**:
-      `docker compose -f compose.chap.yml logs -f chap-worker`; **source**:
+      `docker compose -f compose.chapkit.yml logs -f chap-worker`; **source**:
       `docker compose -f compose.yml -f compose.chapkit.yml logs -f worker`.
 
 ## What's next

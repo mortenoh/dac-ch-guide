@@ -24,9 +24,9 @@ installed:
 
 ```bash
 # chap database
-docker compose -f compose.chap.yml exec chap-postgres psql -U chap -d chap_core
+docker compose -f compose.chapkit.yml exec chap-postgres psql -U chap -d chap_core
 # DHIS2 database
-docker compose -f compose.chap.yml exec dhis2-db psql -U dhis -d dhis
+docker compose -f compose.chapkit.yml exec dhis2-db psql -U dhis -d dhis
 ```
 
 If you run CHAP [from source](../getting-started/chap-core-from-source.md), the chap database
@@ -87,7 +87,7 @@ Stop pgAdmin when you are done with `docker rm -f dac-pgadmin`.
 ## What's in the chap database
 
 ```bash
-docker compose -f compose.chap.yml exec chap-postgres psql -U chap -d chap_core -c '\dt'
+docker compose -f compose.chapkit.yml exec chap-postgres psql -U chap -d chap_core -c '\dt'
 ```
 
 The tables that matter most:
@@ -226,14 +226,14 @@ tool** for DHIS2 data - it enforces permissions and returns clean JSON. Use SQL 
 checks:
 
 ```bash
-docker compose -f compose.chap.yml exec dhis2-db psql -U dhis -d dhis \
+docker compose -f compose.chapkit.yml exec dhis2-db psql -U dhis -d dhis \
   -c "select count(*) from organisationunit;"
 ```
 
 !!! warning "Read, don't write"
     These are the live databases. Inspect freely with `SELECT`s, but do not hand-edit rows -
     changes bypass the application logic and can corrupt a run or your DHIS2 instance. To start
-    clean instead, recreate the stack: `docker compose -f compose.chap.yml down -v`.
+    clean instead, recreate the stack: `docker compose -f compose.chapkit.yml down -v`.
 
 !!! note "Assignment: look inside chap"
     - [ ] Open a `psql` prompt in the chap database and run `\dt`.

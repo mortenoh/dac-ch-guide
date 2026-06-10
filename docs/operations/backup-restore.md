@@ -15,14 +15,14 @@ All commands run from the `docker-dhis2-core` folder (the bundled stack); the
 Dump the **chap** database to a file on your machine, in Postgres' custom (compressed) format:
 
 ```bash
-docker compose -f compose.chap.yml exec -T chap-postgres \
+docker compose -f compose.chapkit.yml exec -T chap-postgres \
   pg_dump -U chap -Fc chap_core > chap_core.dump
 ```
 
 The **DHIS2** database is the same idea on its own service:
 
 ```bash
-docker compose -f compose.chap.yml exec -T dhis2-db \
+docker compose -f compose.chapkit.yml exec -T dhis2-db \
   pg_dump -U dhis -Fc dhis > dhis.dump
 ```
 
@@ -38,18 +38,18 @@ then load the dump into it:
 
 ```bash
 # 1. stop the app so nothing holds the database open
-docker compose -f compose.chap.yml stop chap chap-worker
+docker compose -f compose.chapkit.yml stop chap chap-worker
 
 # 2. drop and recreate an empty database (--force terminates any leftover connections)
-docker compose -f compose.chap.yml exec -T chap-postgres dropdb   -U chap --force chap_core
-docker compose -f compose.chap.yml exec -T chap-postgres createdb -U chap chap_core
+docker compose -f compose.chapkit.yml exec -T chap-postgres dropdb   -U chap --force chap_core
+docker compose -f compose.chapkit.yml exec -T chap-postgres createdb -U chap chap_core
 
 # 3. restore into the empty database
-cat chap_core.dump | docker compose -f compose.chap.yml exec -T chap-postgres \
+cat chap_core.dump | docker compose -f compose.chapkit.yml exec -T chap-postgres \
   pg_restore -U chap -d chap_core
 
 # 4. start the app and confirm it is healthy
-docker compose -f compose.chap.yml up -d chap chap-worker
+docker compose -f compose.chapkit.yml up -d chap chap-worker
 curl -s -u admin:district "http://localhost:8080/api/routes/chap/run/health" | jq
 ```
 
@@ -62,12 +62,12 @@ with `dhis2-db`, `-U dhis`, and `dhis` - stop the `dhis2-web` service first.
     and look around, then drop it:
 
     ```bash
-    docker compose -f compose.chap.yml exec -T chap-postgres createdb -U chap restore_test
-    cat chap_core.dump | docker compose -f compose.chap.yml exec -T chap-postgres \
+    docker compose -f compose.chapkit.yml exec -T chap-postgres createdb -U chap restore_test
+    cat chap_core.dump | docker compose -f compose.chapkit.yml exec -T chap-postgres \
       pg_restore -U chap -d restore_test
-    docker compose -f compose.chap.yml exec -T chap-postgres \
+    docker compose -f compose.chapkit.yml exec -T chap-postgres \
       psql -U chap -d restore_test -c "select count(*) from backtest;"
-    docker compose -f compose.chap.yml exec -T chap-postgres dropdb -U chap restore_test
+    docker compose -f compose.chapkit.yml exec -T chap-postgres dropdb -U chap restore_test
     ```
 
 ## With pgAdmin
