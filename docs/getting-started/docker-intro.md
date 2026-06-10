@@ -13,8 +13,8 @@ app that runs in a container and answers HTTP requests. The next page,
 together.
 
 !!! note "Before you start"
-    You need **Docker** (from [step 1: prepare your machine](prerequisites.md)) and
-    [**uv**](https://docs.astral.sh/uv/), the Python project tool. Check both:
+    You need **Docker** and [**uv**](https://docs.astral.sh/uv/) (the Python project tool), both
+    installed in [step 1: prepare your machine](prerequisites.md). Check them:
 
     ```bash
     docker --version
@@ -104,6 +104,18 @@ EXPOSE 8000
 # Start the API, bound to 0.0.0.0 so it is reachable from outside the container.
 CMD ["uv", "run", "fastapi", "run", "main.py", "--host", "0.0.0.0", "--port", "8000"]
 ```
+
+Because `COPY . .` copies the **whole folder**, add a **`.dockerignore`** next to the
+`Dockerfile` so the local `.venv` (created by `uv add`, and full of your machine's binaries) is
+not copied into the build - the image rebuilds it from `uv.lock` anyway:
+
+```text
+.venv
+__pycache__
+.git
+```
+
+That keeps the build context small and avoids carrying host-platform artifacts into a Linux image.
 
 !!! tip "Why `--host 0.0.0.0`"
     Inside a container, `localhost` means *the container itself*. Binding to `0.0.0.0` makes the

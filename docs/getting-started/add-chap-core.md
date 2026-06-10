@@ -37,11 +37,13 @@ docker compose -f compose.chapkit.yml up -d
 On top of DHIS2 this adds:
 
 - **chap** - the chap-core REST API.
-- **chap-worker** - a background worker that runs the models.
+- **chap-worker** - a background worker that **orchestrates** model runs (it queues each job and
+  calls the model's train/predict); the model itself runs in its own service (`chap-ewars` below).
 - **chap-redis** / **chap-postgres** - the broker and database CHAP needs.
 - **chap-route-init** - a one-shot that creates the DHIS2 Route to CHAP, then exits.
-- **chap-ewars** - the EWARS chapkit model, added by the `compose.ewars.yml` overlay that the
-  umbrella pulls in. It registers itself with chap-core on startup.
+- **chap-ewars** - the EWARS chapkit model service - where the model actually executes (INLA/R).
+  Added by the `compose.ewars.yml` overlay that the umbrella pulls in; it registers itself with
+  chap-core on startup.
 
 The first run pulls the CHAP images, so give it a few minutes. Follow progress with
 `docker compose -f compose.chapkit.yml logs -f`.

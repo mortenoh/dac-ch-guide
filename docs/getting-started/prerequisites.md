@@ -11,6 +11,7 @@ the local DHIS2 and CHAP stack.
 | **Docker Compose** v2.20+ | Orchestrates the stacks. The CHAP overlays use `include`, which older `docker-compose` does not support. | `docker compose version` |
 | **git** | Clones the setup repositories. | `git --version` |
 | **jq** | Makes the JSON in the API exercises readable. | `jq --version` |
+| **[uv](https://docs.astral.sh/uv/)** | The Python project tool used by the [Docker primer](docker-intro.md) (step 2) and the [build-a-model track](../modelling/chapkit-scaffold.md) (step 8). Not needed for the core DHIS2 + CHAP path. | `uv --version` |
 
 ## Install the tools
 
@@ -21,24 +22,27 @@ the local DHIS2 and CHAP stack.
 
     ```bash
     xcode-select --install
-    brew install jq
+    brew install jq uv
     ```
 
 === "Windows"
     Install [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/)
-    with the WSL 2 backend. In a **WSL 2 (Ubuntu)** terminal, install the remaining tools:
+    with the WSL 2 backend. In a **WSL 2 (Ubuntu)** terminal, install the remaining tools (`uv`
+    has no apt package, so use its installer):
 
     ```bash
     sudo apt install git jq
+    curl -LsSf https://astral.sh/uv/install.sh | sh
     ```
 
 === "Linux"
     Install [Docker Engine](https://docs.docker.com/engine/install/) and the
     [Compose plugin](https://docs.docker.com/compose/install/linux/). Then use your package
-    manager for the remaining tools:
+    manager for git and jq, and uv's installer:
 
     ```bash
     sudo apt install git jq
+    curl -LsSf https://astral.sh/uv/install.sh | sh
     ```
 
 !!! warning "Windows users: work inside WSL 2"
@@ -67,6 +71,7 @@ the local DHIS2 and CHAP stack.
     docker compose version
     git --version
     jq --version
+    uv --version                  # for the Docker primer (step 2) and step 8
     docker run --rm hello-world
     ```
 
@@ -82,7 +87,7 @@ the local DHIS2 and CHAP stack.
     ss -tlnp 'sport = :8080 or sport = :8000'
     ```
 
-    - [ ] All four tools report a version.
+    - [ ] Every tool reports a version (`uv` only matters for steps 2 and 8).
     - [ ] `docker run --rm hello-world` prints "Hello from Docker!".
     - [ ] `docker info` shows at least ~6 GB of memory (`MemTotal` >= `6000000000`).
     - [ ] Ports `8080` (DHIS2) and `8000` (CHAP) are free (the checks above print nothing).

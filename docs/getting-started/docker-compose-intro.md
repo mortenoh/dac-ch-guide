@@ -58,16 +58,28 @@ services:
     ports:
       - "8001:8000"       # publish to the host, same as the -p flag
     depends_on:
-      - redis             # start redis before web
+      redis:
+        condition: service_healthy   # wait until redis is actually ready, not just started
 
   redis:
     image: redis:8        # pulled ready-made; no build needed
     # No ports: - redis is only used internally by web, so it needs no host port.
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 5
 ```
 
 Two services. `web` is built from your Dockerfile; `redis` is a published image pulled as-is.
 Note that `redis` has **no `ports:`** - it does not need to be reachable from your laptop, only
 from `web`, and services on the same Compose network reach each other directly.
+
+!!! tip "Wait for *ready*, not just *started*"
+    A bare `depends_on: [redis]` only waits for the redis container to **start**, not to be
+    **ready to accept connections** - so the very first request could race redis and fail. The
+    `healthcheck` (a `redis-cli ping` until it answers) plus `condition: service_healthy` makes
+    `web` wait until redis is genuinely up. The workshop's real stacks gate startup the same way.
 
 ## Step 3 - Run the whole thing
 
