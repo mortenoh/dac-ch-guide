@@ -24,7 +24,8 @@ settings for a run.
 
 ### Step 3 - Select the model
 
-Click **Select model** and choose **CHAP-EWARS Model (chapkit)**, then **Confirm Selection**.
+Click **Select model**, pick **CHAP-EWARS Model (chapkit)** from the list (the panel on the
+right shows its target, covariates, and period type), then click **Use this model**.
 
 ![Model picker](img/eval-model-picker.png)
 
@@ -91,51 +92,66 @@ the actual disease cases; use the location list to look at one province at a tim
 
 ## Part 2 - Predict
 
-A prediction uses the same setup but **forecasts the future** instead of scoring the past.
+A prediction uses the same configuration but **forecasts the future** instead of scoring the
+past. In the app this is a two-step pattern: you create a reusable **prediction setup** from
+your evaluation, then **run** forecasts from it.
 
-### Step 1 - Start a prediction from the evaluation
+### Step 1 - Create a prediction setup from the evaluation
 
-On the evaluation's result page, under **Quick actions**, click **Predict...** and confirm
-**Continue**. This opens a prediction form pre-filled with the same model, organisation units,
-and data mapping.
+On the evaluation's result page, under **Quick actions**, click **Create prediction setup**. A
+prediction setup carries over the model, organisation units, periods, and data mapping from your
+evaluation, so you do not re-enter any of it. Give it a name (`EWARS - Laos provinces 2023-2024`)
+and click **Save**. (Leave **Set default import mapping** off for now - that only pre-selects
+where imported forecasts land.)
 
-### Step 2 - Name and run
+![Create prediction setup](img/predict-form-filled.png)
 
-Give it a name (`EWARS - Laos provinces 2023-2024`) and click **Start import**. Everything else
-is already set from the evaluation.
+### Step 2 - Run a prediction
 
-![Prediction form, pre-filled](img/predict-form-filled.png)
+The setup opens on its own page with no runs yet. Under **Quick actions**, click **Run
+prediction**. The run form is pre-filled from the setup; the one thing you set is the **last
+training period** - the cutoff the model trains up to and forecasts *after*. Choose **December
+2024** (the end of your data), then click **Run prediction**. The model forecasts the next
+3 months from there.
 
 ### Step 3 - Watch the job
 
-As before, the run shows up under **Jobs**. A prediction is quicker than a backtest - it only
-forecasts forward.
+As before, the run shows up under **Jobs**, here as **Make prediction**. A prediction is quicker
+than a backtest - it only forecasts forward.
 
 ![The prediction job running](img/predict-job-running.png)
 
 ### Step 4 - View the forecast
 
-Open the prediction from **Predict**. The chart shows the actual history plus the **median
-prediction** and the **50% / 80% prediction intervals** for the next 3 months
-(`2025-01` to `2025-03`). The **Table** and **Map** tabs show the same forecast as numbers and
-on a map.
+Back on the prediction setup page, the finished run is listed under **Completed predictions**
+with its **prediction periods** (`2025-01` to `2025-03`) and **training data cutoff**
+(December 2024). Open it. The **Prediction details** page shows one chart per province: the
+actual history plus the forecast - the **median prediction** and the **50% / 80% prediction
+intervals** - for the coming 3 months.
 
 ![Prediction forecast with intervals](img/predict-results.png)
 
 !!! note "Why three months"
-    The **Predict...** form does not ask for a forecast length - the horizon defaults to
-    **3 periods** (here 3 months), so you inherit it rather than setting it. The API exposes it
-    as `nPeriods` if you script a run ([through the API](with-curl.md)).
+    The run form does not ask for a forecast length - the horizon defaults to **3 periods**
+    (here 3 months) after the training cutoff, so you inherit it rather than setting it. The API
+    exposes it as `nPeriods` if you script a run ([through the API](with-curl.md)).
 
 !!! tip "Importing predictions into DHIS2"
-    The **Import** action on a prediction writes the forecast back into DHIS2 (as the CHAP
+    The **Import** button on the prediction run writes the forecast back into DHIS2 (as the CHAP
     quantile data elements), so it can be shown in dashboards and the Data Visualizer alongside
-    the real data.
+    the real data. The setup's **Set default import mapping** option (Step 1) pre-selects which
+    data elements those go to.
+
+!!! note "The setup is reusable"
+    Unlike a one-off run, the prediction setup persists: rerun it when new data arrives (each run
+    is kept under **Completed predictions**), or edit it - all from the setup page, without
+    re-entering the configuration.
 
 !!! note "Assignment: make a prediction"
-    - [ ] Create a prediction from your evaluation (same configuration).
+    - [ ] Create a prediction setup from your evaluation, then **Run prediction** with the
+      training cutoff at December 2024.
     - [ ] The job reaches **SUCCESS**.
-    - [ ] Open it and confirm you see a forecast with prediction intervals for the coming
+    - [ ] Open the run and confirm you see a forecast with prediction intervals for the coming
       months.
 
 ## Next step
