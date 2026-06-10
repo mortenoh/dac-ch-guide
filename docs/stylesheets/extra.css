@@ -1,3 +1,9 @@
+/* A little more content width than Material's default 61rem, so wide screens
+   have less empty margin. */
+.md-grid {
+  max-width: 70rem;
+}
+
 /* Grid cards: keep a clearly visible border; on hover darken the background a
    touch and switch the border to the accent colour. */
 .md-typeset .grid.cards > :is(ul, ol) > li {
