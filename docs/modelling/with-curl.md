@@ -159,17 +159,55 @@ well-calibrated.
     Judge a model by **comparing runs**, not against a fixed number - a successful run with
     different metrics is not wrong.
 
-## Predicting instead
+## Predicting: the prediction setup
 
-A forecast uses the **same data**, posted to a different endpoint with how many future periods
-to predict. Build the request exactly as in Step 4 (you can reuse `request.json`), add
-`"nPeriods": 3`, and `POST`:
+In the Modelling App, forecasts run from a **prediction setup** - a saved, reusable object
+created from an evaluation - and the API works the same way. This is the primary path: you
+create a setup once from your backtest, then run forecasts from it (now, or later as new data
+arrives). The one-shot `make-prediction` call is still available as a shortcut - see the tip at
+the end.
+
+### Step 1 - Find the backtest id
+
+Your evaluation from Step 5 is stored as a **backtest**. Resolve its id by the name you gave it:
 
 ```bash
-jq '. + {nPeriods: 3}' request.json > prediction-request.json
+BACKTEST_ID=$(curl -fsS -u "$AUTH" "$CHAP/crud/backtests" \
+  | jq -r --arg n "EWARS - Laos provinces 2023-2024" '.[] | select(.name==$n) | .id' | head -1)
+echo "$BACKTEST_ID"
+```
 
-PRED_JOB=$(curl -fsS -u "$AUTH" -X POST "$CHAP/analytics/make-prediction" \
-  -H 'Content-Type: application/json' -d @prediction-request.json | jq -r '.id')
+### Step 2 - Create the prediction setup
+
+`POST` the backtest id and a name. The setup **inherits the model, organisation units, periods,
+and data mapping** from the backtest, so you do not re-send any of that:
+
+```bash
+SETUP_ID=$(curl -fsS -u "$AUTH" -X POST "$CHAP/crud/prediction-setups" \
+  -H 'Content-Type: application/json' \
+  -d "{\"backtestId\": $BACKTEST_ID, \"name\": \"EWARS - Laos provinces 2023-2024\"}" \
+  | jq -r '.id')
+echo "$SETUP_ID"
+```
+
+!!! note "One setup per backtest"
+    A backtest can have only one setup - creating a second for the same backtest returns
+    **HTTP 409**. If you hit it, list the existing ones and reuse the id:
+    `curl -fsS -u "$AUTH" "$CHAP/crud/prediction-setups" | jq -r '.[] | "\(.id)\t\(.name)"'`.
+
+### Step 3 - Run a forecast from the setup
+
+Running supplies the **data to forecast from** - the same observations and geometry as the
+evaluation, so reuse `request.json` - plus `nPeriods`. The forecast covers the periods *after*
+the data's last month, so with data through `2024-12` and `nPeriods: 3` you get `2025-01` to
+`2025-03`:
+
+```bash
+jq '{name:"EWARS - Laos provinces 2023-2024", geojson:.geojson, providedData:.providedData, nPeriods:3}' \
+  request.json > run-request.json
+
+PRED_JOB=$(curl -fsS -u "$AUTH" -X POST "$CHAP/crud/prediction-setups/$SETUP_ID/run" \
+  -H 'Content-Type: application/json' -d @run-request.json | jq -r '.id')
 ```
 
 Poll the job as before, then read the forecast from its `prediction_result`:
@@ -180,11 +218,33 @@ curl -fsS -u "$AUTH" "$CHAP/jobs/$PRED_JOB/prediction_result" \
   | jq '{name, modelId, nPeriods, orgUnits:(.orgUnits|length)}'
 ```
 
+Re-running the setup (Step 3 again, with newer data) produces another forecast under the same
+setup - which is the point of keeping it.
+
+!!! tip "Quick one-shot: make-prediction"
+    To forecast once without a setup, post the **full** request (as in Step 4, plus `nPeriods`)
+    straight to `…/analytics/make-prediction`; it returns a job the same way:
+
+    ```bash
+    jq '. + {nPeriods: 3}' request.json > prediction-request.json
+    curl -fsS -u "$AUTH" -X POST "$CHAP/analytics/make-prediction" \
+      -H 'Content-Type: application/json' -d @prediction-request.json | jq -r '.id'
+    ```
+
+    Prefer the setup flow above for anything you will repeat - it mirrors the app and keeps each
+    run under one named, re-runnable setup.
+
+!!! note "Scheduling is external"
+    A setup also accepts `scheduleCronExpression` / `scheduleEnabled`, but chap does **not** run
+    the cron itself - those fields only record a schedule for an **external** trigger (a cron job,
+    CI, an orchestrator) to call the `…/run` endpoint on. In these guides you run it on demand.
+
 !!! note "Assignment: drive chap from curl"
     - [ ] Fetch the data from the analytics API and build `request.json`.
     - [ ] Dry-run it (`?dryRun=true`), then create the evaluation, capturing the `JOB_ID`.
     - [ ] Poll `…/jobs/$JOB_ID` to `"SUCCESS"` and read `…/jobs/$JOB_ID/evaluation_result`.
-    - [ ] Create a prediction (`nPeriods: 3`) the same way and read its `prediction_result`.
+    - [ ] Resolve the `BACKTEST_ID`, create a **prediction setup**, run it (`nPeriods: 3`), and
+      read the run's `prediction_result`.
 
 ## Next step
 

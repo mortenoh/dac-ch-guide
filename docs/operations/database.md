@@ -140,8 +140,11 @@ operation first **snapshots its input data** (`dataset` + `observation`), then w
     | `prediction` | **+1** | the forecast itself |
     | `predictionsamplesentry` | **+54** | the forecast values (18 org units × 3 months) |
 
-`backtestmetric` stays empty (the metrics live in `backtest.aggregate_metrics`), and
-`predictionsetup` is only written for **scheduled** predictions, not a one-off run.
+`backtestmetric` stays empty (the metrics live in `backtest.aggregate_metrics`). A
+`predictionsetup` row is written when you create a **prediction setup** (the usual path in the
+app and the [API walkthrough](../modelling/with-curl.md) - one per backtest); each forecast run
+from it adds the `prediction` row above with its `prediction_setup_id` set. A one-off
+`make-prediction` writes the `prediction` with `prediction_setup_id` left `null`.
 
 ### The affected tables, column by column
 

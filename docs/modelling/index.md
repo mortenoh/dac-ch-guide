@@ -75,7 +75,8 @@ with the pieces you will use:
 
 - `…/v1/crud/configured-models` - the models, e.g. id `12`
 - `…/v1/crud/backtests` - evaluations
-- `…/v1/crud/predictions` - forecasts
+- `…/v1/crud/prediction-setups` - reusable prediction configs (created from a backtest, then run)
+- `…/v1/crud/predictions` - the forecasts a setup run produces
 - `…/v1/jobs` - the running/finished jobs
 
 !!! note "Before you start"
