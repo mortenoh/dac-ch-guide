@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{#
+  Pin Safari's toolbar/tab tint to the header colour. Without an explicit
+  theme-color, desktop Safari samples the top of the page and flickers between
+  the indigo header and the dark background on reload. A fixed value makes it
+  consistent (and matches the indigo header in both light and dark schemes).
+#}
+{% block extrahead %}
+  <meta name="theme-color" content="#4051b5">
+{% endblock %}

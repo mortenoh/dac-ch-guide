@@ -6,6 +6,7 @@ repo_name: mortenoh/dac-ch-guide
 
 theme:
   name: material
+  custom_dir: overrides
   palette:
     - scheme: default
       primary: indigo
