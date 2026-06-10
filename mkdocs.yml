@@ -32,6 +32,7 @@ nav:
   - Start here: index.md
   - Workshop:
       - 1. Prepare your machine: getting-started/prerequisites.md
+      - "Docker basics (primer)": getting-started/docker-intro.md
       - 2. Start DHIS2: getting-started/start-dhis2.md
       - 3. Connect CHAP:
           - Choose a setup: getting-started/chap-setup.md

@@ -1,0 +1,204 @@
+# Docker basics: your first container
+
+This workshop runs **everything** in Docker - DHIS2, CHAP, the databases, and (on the modeller
+track) your own model. Before you orchestrate those big stacks, it helps to build and run **one
+tiny container yourself** so the moving parts are familiar.
+
+This page is an **optional primer**. Skip it if you are already comfortable with Docker. What you
+build here - a minimal Python web service in a container - is, in miniature, exactly what a
+chapkit model service is ([step 7: build a model](../modelling/chapkit-scaffold.md)): a small web
+app that runs in a container and answers HTTP requests.
+
+!!! note "Before you start"
+    You need **Docker** (from [step 1: prepare your machine](prerequisites.md)) and
+    [**uv**](https://docs.astral.sh/uv/), the Python project tool. Check both:
+
+    ```bash
+    docker --version
+    uv --version
+    ```
+
+## Step 1 - Create a project with uv
+
+`uv init` scaffolds a new Python project in one command:
+
+```bash
+uv init hello-docker
+cd hello-docker
+```
+
+It writes a small, complete project:
+
+```text
+hello-docker/
+├── main.py              # a placeholder script (you replace it below)
+├── pyproject.toml       # project metadata and dependencies
+├── README.md
+├── .python-version      # the Python version uv will use (3.13)
+└── .gitignore
+```
+
+## Step 2 - Add FastAPI
+
+[FastAPI](https://fastapi.tiangolo.com/) is a small framework for building web APIs.
+Add it with the **`standard`** extras, which pull in the `uvicorn` web server and the `fastapi`
+command-line tool you will use to run the app:
+
+```bash
+uv add "fastapi[standard]"
+```
+
+This records the dependency in `pyproject.toml` and pins the exact versions in a new
+**`uv.lock`** file - the lock file is what makes the Docker build reproducible.
+
+## Step 3 - Write the hello-world app
+
+Replace the contents of **`main.py`** with a single endpoint:
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello from Docker!"}
+```
+
+`app` is the application; `@app.get("/")` says "when someone requests `/`, run this function and
+return its result as JSON." Try it on your own machine first:
+
+```bash
+uv run fastapi dev
+```
+
+Open [http://localhost:8000](http://localhost:8000) - you should see the JSON message. Press
+`Ctrl+C` to stop. (If port `8000` is busy - for example CHAP is running - add `--port 8001`.)
+
+## Step 4 - A minimal Dockerfile
+
+A **Dockerfile** is the recipe for building an image: the base system, your code, its
+dependencies, and the command to start. Create a file named **`Dockerfile`** (no extension):
+
+```dockerfile
+# Start from a small official Python image.
+FROM python:3.13-slim
+
+# Copy the uv binary in from its official image - no pip install needed.
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+# Everything below happens inside /app in the image.
+WORKDIR /app
+
+# Copy your project in, then install exactly what uv.lock pins (skip dev extras).
+COPY . .
+RUN uv sync --frozen --no-dev
+
+# The app listens on 8000; document that for whoever runs the image.
+EXPOSE 8000
+
+# Start the API, bound to 0.0.0.0 so it is reachable from outside the container.
+CMD ["uv", "run", "fastapi", "run", "main.py", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+!!! tip "Why `--host 0.0.0.0`"
+    Inside a container, `localhost` means *the container itself*. Binding to `0.0.0.0` makes the
+    app listen on all interfaces, so the port you publish with `-p` (next step) actually reaches
+    it. A service bound to `127.0.0.1` inside a container is unreachable from your machine.
+
+## Step 5 - Build and run
+
+**Build** the image from the Dockerfile (the `.` is "use this folder"; `-t` names the image):
+
+```bash
+docker build -t hello-docker .
+```
+
+**Run** a container from it:
+
+```bash
+docker run --rm -p 8001:8000 hello-docker
+```
+
+- `-p 8001:8000` maps **host port 8001 -> container port 8000**. The app listens on `8000`
+  *inside* the container; you reach it at `8001` on your machine. Using `8001` here keeps it clear
+  of CHAP (which uses `8000`).
+- `--rm` deletes the container when you stop it, so nothing is left behind.
+
+In another terminal, call it:
+
+```bash
+curl http://localhost:8001/
+# {"message":"Hello from Docker!"}
+```
+
+Press `Ctrl+C` in the first terminal to stop the container.
+
+## Step 6 - The same thing with Docker Compose
+
+That `docker run` line is already carrying a couple of flags, and real setups need many more -
+volumes, environment variables, several containers that must start together. **Docker Compose**
+moves all of that into a file so you start everything with one short command. The whole
+workshop - DHIS2, CHAP, the databases - is run this way.
+
+Create a **`compose.yml`** next to your `Dockerfile`:
+
+```yaml
+services:
+  web:
+    build: .            # build the image from the Dockerfile in this folder
+    ports:
+      - "8001:8000"     # same host:container mapping as the -p flag
+```
+
+Now the whole lifecycle is a handful of `docker compose` commands (run from this folder):
+
+```bash
+docker compose up -d --build   # build the image and start, in the background (-d)
+docker compose ps              # what is running
+docker compose logs -f         # follow the logs (Ctrl+C stops following, not the app)
+curl http://localhost:8001/    # {"message":"Hello from Docker!"}
+docker compose down            # stop and remove the container and its network
+```
+
+`docker compose ps` lists your container as **`hello-docker-web-1`** - Compose names it
+`<project>-<service>-<number>`. That is the same naming you will see in the workshop, where the
+stack's containers show up as `docker-dhis2-core-chap-1`, `docker-dhis2-core-dhis2-web-1`, and so
+on.
+
+!!! info "From one service to many"
+    A real `compose.yml` lists **several** services, and Compose puts them on one shared network
+    where each reaches the others **by service name** - no published ports needed between them.
+    That is exactly how the workshop wires things together: DHIS2 reaches CHAP at
+    `http://chap:8000` because `chap` is a service name on the shared Compose network. You will
+    also see one file `include` another to layer services on - the same overlay idea behind
+    `compose.chap.yml` and `compose.chapkit.yml` in [step 3](add-chap-core.md).
+
+!!! note "Assignment: a container you built"
+    - [ ] `uv init` a project, `uv add "fastapi[standard]"`, and write the hello-world `main.py`.
+    - [ ] Write the `Dockerfile` and `docker build -t hello-docker .` succeeds.
+    - [ ] `docker run --rm -p 8001:8000 hello-docker`, then `curl http://localhost:8001/` returns
+      the JSON message.
+    - [ ] Add a `compose.yml`, then `docker compose up -d --build` and `curl` the same response -
+      and `docker compose down` to clean up.
+
+## What you just learned
+
+The same ideas scale up to the whole workshop:
+
+- An **image** is a built, shippable bundle of code + dependencies; a **container** is a running
+  instance of one. The DHIS2 and CHAP services are images someone else built and published.
+- A **Dockerfile** builds an image from your code - which is exactly how you package a model in
+  [step 7](../modelling/chapkit-scaffold.md) (its `Dockerfile` starts `FROM` a chapkit base image
+  instead of plain Python).
+- **Port publishing** (`-p host:container`) is how the guides expose DHIS2 on `8080` and CHAP on
+  `8000`.
+- **Docker Compose** declares one or more services in a file and runs them together; on its shared
+  network they reach each other by service name. Every `docker compose` command in the rest of the
+  workshop is the same handful you just used here, only with more services in the file.
+
+## Next step
+
+Continue to [step 2: start DHIS2](start-dhis2.md), where a single `docker compose` command brings
+up a whole stack of these containers at once.

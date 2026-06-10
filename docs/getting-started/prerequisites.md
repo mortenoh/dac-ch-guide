@@ -90,3 +90,7 @@ the local DHIS2 and CHAP stack.
 ## Next step
 
 Continue to [step 2: start DHIS2](start-dhis2.md).
+
+!!! tip "New to Docker?"
+    The optional [Docker basics primer](docker-intro.md) builds and runs one tiny container from
+    scratch - a good 10-minute warm-up before the workshop brings up whole stacks of them.
