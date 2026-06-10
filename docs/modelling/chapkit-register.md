@@ -43,6 +43,12 @@ services:
 The service name (`my-model`) is how chap reaches it on the shared network - no host addresses
 or ports to configure.
 
+!!! note "If your chap requires a registration key"
+    A chap server can lock down registration by setting `SERVICEKIT_REGISTRATION_KEY`; the model
+    must then send the matching key (the EWARS overlay has a commented `SERVICEKIT_REGISTRATION_KEY`
+    line for this). The from-source dev stack in these guides does **not** set it, so you can
+    leave it out.
+
 ## Step 3 - Bring it up alongside chap
 
 Layer your overlay onto the from-source stack:
