@@ -131,6 +131,61 @@ uvx chapkit test --configs 2 --trainings 2 --predictions 5 --rows 250 --verbose
     actual `sample_0` values your change produces, use the interactive **`/docs`**: call the
     train endpoint, then the predict endpoint, and read `sample_0` in the JSON response.
 
+## Advanced - explore the running service
+
+Optional, beyond the assignment. The service is more than two endpoints: it **persists every
+run** and exposes a small REST API over the results. `chapkit test` already populated it.
+
+### Where state lives - the SQLite file
+
+chapkit keeps its **configs, jobs, and artifacts** in a single SQLite file at `data/chapkit.db`
+inside the container (the default `DATABASE_URL=sqlite+aiosqlite:///data/chapkit.db`). The
+scaffold's `compose.yml` puts that `data/` directory in a **named volume**, so the database
+survives `docker compose restart` and `up`:
+
+```bash
+docker compose exec my-model ls -lh data/chapkit.db
+```
+
+Point `DATABASE_URL` at a different file - or at a hosted Postgres - to move that state
+elsewhere (for example when deploying next to chap-core).
+
+### Artifacts - every train and predict is saved
+
+Each training run stores a **model artifact**; each prediction stores a **prediction artifact**
+linked to the model it came from (a parent -> child lineage). List what `chapkit test` produced -
+either from the live service or straight from the SQLite file:
+
+```bash
+uvx chapkit artifact list --url http://localhost:9090     # via the running service
+uvx chapkit artifact list --database data/chapkit.db      # straight from the db file
+```
+
+Filter by type, and download a run's full **workspace** (its inputs, scripts, logs, and outputs)
+as a ZIP:
+
+```bash
+uvx chapkit artifact list --url http://localhost:9090 --type ml_training_workspace
+uvx chapkit artifact download <artifact-id> --url http://localhost:9090 --extract
+```
+
+### The REST API behind it
+
+All of that is plain HTTP - browse it interactively at `/docs`, or curl it:
+
+```bash
+curl -s http://localhost:9090/api/v1/configs   | jq   # configs available to train against
+curl -s http://localhost:9090/api/v1/artifacts | jq   # every model and prediction
+curl -s http://localhost:9090/api/v1/jobs      | jq   # train/predict job history
+# the lineage under one model - its predictions:
+curl -s "http://localhost:9090/api/v1/artifacts/<artifact-id>/\$tree" | jq
+```
+
+!!! note "This is the API chap-core uses"
+    After you register the model ([step 7b](chapkit-register.md)), chap-core drives these exact
+    endpoints for you: it pushes a config, calls `$train`, then `$predict`, and reads back the
+    artifacts. Running them by hand here is just doing manually what chap automates.
+
 ## What's next
 
 Your model runs and passes its own tests. Next, [register it with CHAP](chapkit-register.md) so
