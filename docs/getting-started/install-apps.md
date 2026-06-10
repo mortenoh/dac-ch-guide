@@ -1,6 +1,6 @@
 # Install the DHIS2 apps
 
-This is step 4 of the workshop. Both CHAP setup paths rejoin here.
+This is step 5 of the workshop. Both CHAP setup paths rejoin here.
 
 The climate track uses two DHIS2 apps, both installed from the **App Hub** inside DHIS2 - no
 command line needed:
@@ -95,5 +95,5 @@ for normal use, prefer the UI.
 
 ## Next step
 
-Continue to [step 5: evaluate and predict](../modelling/index.md). Start with the shared
+Continue to [step 6: evaluate and predict](../modelling/index.md). Start with the shared
 workflow and demo data, then choose the UI or API walkthrough.

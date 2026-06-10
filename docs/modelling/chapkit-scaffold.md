@@ -1,6 +1,6 @@
 # Scaffold and run a chapkit model
 
-This is step 7a of the workshop, and the start of the **modeller** track: building your own
+This is step 8a of the workshop, and the start of the **modeller** track: building your own
 model. CHAP can run models packaged in more than one way. The classic kind is a git repo with
 an **`MLproject`** file (the MLflow standard) that declares the model's train/predict entry
 points and environment; CHAP clones and runs it directly, seeding it as a model template from
@@ -8,7 +8,7 @@ its own `default.yaml` registry. **chapkit** is a different approach: a toolkit 
 training and prediction code into a small web service that runs and self-registers with CHAP.
 The *CHAP-EWARS Model (chapkit)* you used earlier is built this way, and it is the approach this
 guide teaches. Here you scaffold one, make it do something, run it, and test it - all on its
-own, before any chap-core wiring (that is [step 7b](chapkit-register.md)).
+own, before any chap-core wiring (that is [step 8b](chapkit-register.md)).
 
 !!! note "Before you start"
     You need **Docker** (from [step 1](../getting-started/prerequisites.md)) and
@@ -131,7 +131,7 @@ uvx chapkit test --configs 2 --trainings 2 --predictions 5 --rows 250 --verbose
       forecast the target's mean scaled by a constant, or a fixed value - so the output is
       clearly yours, not the untouched example.
     - [ ] In `main.py`, declare at least one covariate in `MLServiceInfo`
-      (`required_covariates=["population"]`) - step 7b's evaluation predicts the target from a
+      (`required_covariates=["population"]`) - step 8b's evaluation predicts the target from a
       future covariate, so a model with none cannot be backtested.
     - [ ] `uv lock`, then `docker compose up -d --build`; confirm `/health` and open `/docs`.
     - [ ] Run `uvx chapkit test --verbose` and get **ALL TESTS PASSED** - the tester drives a
@@ -211,7 +211,7 @@ curl -s "http://localhost:9090/api/v1/artifacts/<artifact-id>/\$tree" | jq
 ```
 
 !!! note "This is the API chap-core uses"
-    After you register the model ([step 7b](chapkit-register.md)), chap-core drives these exact
+    After you register the model ([step 8b](chapkit-register.md)), chap-core drives these exact
     endpoints for you: it pushes a config, calls `$train`, then `$predict`, and reads back the
     artifacts. Running them by hand here is just doing manually what chap automates.
 

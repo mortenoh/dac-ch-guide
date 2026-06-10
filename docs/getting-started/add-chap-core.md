@@ -1,6 +1,6 @@
 # Quick setup (bundled)
 
-This is the **quick path** for step 3: use released images bundled with the DHIS2 stack. For
+This is the **quick path** for step 4: use released images bundled with the DHIS2 stack. For
 the alternative and its trade-offs, see [Choose how to run CHAP](chap-setup.md).
 
 With DHIS2 running, you now add **chap-core** - the modelling engine - and connect the two so
@@ -11,7 +11,7 @@ overlays** that stack on top of each other, so you bring up exactly the layer yo
 
 | Compose file | Brings up | Use it for |
 |---|---|---|
-| `compose.yml` | DHIS2 only | [step 2](start-dhis2.md) |
+| `compose.yml` | DHIS2 only | [step 3](start-dhis2.md) |
 | `compose.chap.yml` | DHIS2 **+ chap-core** (its built-in models) | chap-core without any chapkit model |
 | `compose.chapkit.yml` | DHIS2 + chap-core **+ chapkit models (EWARS)** | this workshop |
 
@@ -139,4 +139,4 @@ You should see `CHAP-EWARS Model (chapkit)`. You can also open the CHAP API docs
 
 ## Next step
 
-Continue to [step 4: install the DHIS2 apps](install-apps.md).
+Continue to [step 5: install the DHIS2 apps](install-apps.md).

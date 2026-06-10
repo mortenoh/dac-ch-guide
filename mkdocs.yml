@@ -32,19 +32,21 @@ nav:
   - Start here: index.md
   - Workshop:
       - 1. Prepare your machine: getting-started/prerequisites.md
-      - "Docker basics (primer)": getting-started/docker-intro.md
-      - 2. Start DHIS2: getting-started/start-dhis2.md
-      - 3. Connect CHAP:
+      - 2. Docker basics (optional):
+          - Your first container: getting-started/docker-intro.md
+          - Services with Compose: getting-started/docker-compose-intro.md
+      - 3. Start DHIS2: getting-started/start-dhis2.md
+      - 4. Connect CHAP:
           - Choose a setup: getting-started/chap-setup.md
           - Quick setup (bundled): getting-started/add-chap-core.md
           - Development setup (source): getting-started/chap-core-from-source.md
-      - 4. Install the apps: getting-started/install-apps.md
-      - 5. Evaluate and predict:
+      - 5. Install the apps: getting-started/install-apps.md
+      - 6. Evaluate and predict:
           - Workflow and demo data: modelling/index.md
           - In the Modelling App: modelling/with-ui.md
           - Through the API: modelling/with-curl.md
-      - 6. Configure a model: modelling/configured-models-curl.md
-      - 7. Build a model:
+      - 7. Configure a model: modelling/configured-models-curl.md
+      - 8. Build a model:
           - Scaffold and run: modelling/chapkit-scaffold.md
           - Register with CHAP: modelling/chapkit-register.md
   - Reference:
@@ -52,6 +54,9 @@ nav:
       - Inspect the databases: operations/database.md
       - Back up and restore: operations/backup-restore.md
       - Upgrade or roll back CHAP: operations/upgrading.md
+
+extra_css:
+  - stylesheets/extra.css
 
 markdown_extensions:
   - admonition

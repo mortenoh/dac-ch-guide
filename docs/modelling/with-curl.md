@@ -248,5 +248,5 @@ setup - which is the point of keeping it.
 
 ## Next step
 
-Continue to [step 6: configure a model](configured-models-curl.md), or return to the
+Continue to [step 7: configure a model](configured-models-curl.md), or return to the
 [Modelling App walkthrough](with-ui.md) to see the same workflow in the UI.

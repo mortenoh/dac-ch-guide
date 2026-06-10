@@ -1,13 +1,16 @@
 # Docker basics: your first container
 
-This workshop runs **everything** in Docker - DHIS2, CHAP, the databases, and (on the modeller
-track) your own model. Before you orchestrate those big stacks, it helps to build and run **one
-tiny container yourself** so the moving parts are familiar.
+This is step 2 of the workshop - an **optional primer**, in two short pages. The workshop runs
+**everything** in Docker - DHIS2, CHAP, the databases, and (on the modeller track) your own model
+- so before you orchestrate those big stacks, it helps to build and run **one tiny container
+yourself** so the moving parts are familiar.
 
-This page is an **optional primer**. Skip it if you are already comfortable with Docker. What you
+Skip both pages if you are already comfortable with Docker and Compose. What you
 build here - a minimal Python web service in a container - is, in miniature, exactly what a
-chapkit model service is ([step 7: build a model](../modelling/chapkit-scaffold.md)): a small web
-app that runs in a container and answers HTTP requests.
+chapkit model service is ([step 8: build a model](../modelling/chapkit-scaffold.md)): a small web
+app that runs in a container and answers HTTP requests. The next page,
+[Docker Compose basics](docker-compose-intro.md), grows it into several containers working
+together.
 
 !!! note "Before you start"
     You need **Docker** (from [step 1: prepare your machine](prerequisites.md)) and
@@ -135,70 +138,27 @@ curl http://localhost:8001/
 
 Press `Ctrl+C` in the first terminal to stop the container.
 
-## Step 6 - The same thing with Docker Compose
-
-That `docker run` line is already carrying a couple of flags, and real setups need many more -
-volumes, environment variables, several containers that must start together. **Docker Compose**
-moves all of that into a file so you start everything with one short command. The whole
-workshop - DHIS2, CHAP, the databases - is run this way.
-
-Create a **`compose.yml`** next to your `Dockerfile`:
-
-```yaml
-services:
-  web:
-    build: .            # build the image from the Dockerfile in this folder
-    ports:
-      - "8001:8000"     # same host:container mapping as the -p flag
-```
-
-Now the whole lifecycle is a handful of `docker compose` commands (run from this folder):
-
-```bash
-docker compose up -d --build   # build the image and start, in the background (-d)
-docker compose ps              # what is running
-docker compose logs -f         # follow the logs (Ctrl+C stops following, not the app)
-curl http://localhost:8001/    # {"message":"Hello from Docker!"}
-docker compose down            # stop and remove the container and its network
-```
-
-`docker compose ps` lists your container as **`hello-docker-web-1`** - Compose names it
-`<project>-<service>-<number>`. That is the same naming you will see in the workshop, where the
-stack's containers show up as `docker-dhis2-core-chap-1`, `docker-dhis2-core-dhis2-web-1`, and so
-on.
-
-!!! info "From one service to many"
-    A real `compose.yml` lists **several** services, and Compose puts them on one shared network
-    where each reaches the others **by service name** - no published ports needed between them.
-    That is exactly how the workshop wires things together: DHIS2 reaches CHAP at
-    `http://chap:8000` because `chap` is a service name on the shared Compose network. You will
-    also see one file `include` another to layer services on - the same overlay idea behind
-    `compose.chap.yml` and `compose.chapkit.yml` in [step 3](add-chap-core.md).
-
 !!! note "Assignment: a container you built"
     - [ ] `uv init` a project, `uv add "fastapi[standard]"`, and write the hello-world `main.py`.
     - [ ] Write the `Dockerfile` and `docker build -t hello-docker .` succeeds.
     - [ ] `docker run --rm -p 8001:8000 hello-docker`, then `curl http://localhost:8001/` returns
       the JSON message.
-    - [ ] Add a `compose.yml`, then `docker compose up -d --build` and `curl` the same response -
-      and `docker compose down` to clean up.
 
 ## What you just learned
-
-The same ideas scale up to the whole workshop:
 
 - An **image** is a built, shippable bundle of code + dependencies; a **container** is a running
   instance of one. The DHIS2 and CHAP services are images someone else built and published.
 - A **Dockerfile** builds an image from your code - which is exactly how you package a model in
-  [step 7](../modelling/chapkit-scaffold.md) (its `Dockerfile` starts `FROM` a chapkit base image
+  [step 8](../modelling/chapkit-scaffold.md) (its `Dockerfile` starts `FROM` a chapkit base image
   instead of plain Python).
 - **Port publishing** (`-p host:container`) is how the guides expose DHIS2 on `8080` and CHAP on
   `8000`.
-- **Docker Compose** declares one or more services in a file and runs them together; on its shared
-  network they reach each other by service name. Every `docker compose` command in the rest of the
-  workshop is the same handful you just used here, only with more services in the file.
+
+So far that is a single container, started with a single `docker run`. Real systems - including
+this workshop - run **several** containers that must start together and talk to each other. That
+is what Docker Compose is for.
 
 ## Next step
 
-Continue to [step 2: start DHIS2](start-dhis2.md), where a single `docker compose` command brings
-up a whole stack of these containers at once.
+Continue to [Docker Compose basics](docker-compose-intro.md) to run several containers together
+with one command - then on to [step 3: start DHIS2](start-dhis2.md).

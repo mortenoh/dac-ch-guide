@@ -1,26 +1,79 @@
 # DAC Climate and Health
 
 Build a local **DHIS2 + CHAP** environment, run an evaluation and prediction, then inspect
-and extend the workflow. The core path (steps 1-6) has a single choice that does not change the
-rest: use released CHAP images for the quickest setup, or build CHAP from source. The optional
-**modeller track** (step 7, building your own model) needs the source setup.
+and extend the workflow. The core path has a single choice that does not change the rest: use
+released CHAP images for the quickest setup, or build CHAP from source. The optional
+**modeller track** (step 8, building your own model) needs the source setup.
 
 ## Follow the workshop
 
-1. **[Prepare your machine](getting-started/prerequisites.md)** - Install Docker, Git, and the
-   small command-line tools used in the exercises.
-2. **[Start DHIS2](getting-started/start-dhis2.md)** - Run the Laos climate demo database and
-   confirm that you can log in.
-3. **[Connect CHAP](getting-started/chap-setup.md)** - Choose the bundled or source setup and
-   verify the DHIS2 route.
-4. **[Install the apps](getting-started/install-apps.md)** - Add the Climate App and Modelling
-   App from the DHIS2 App Hub.
-5. **[Evaluate and predict](modelling/index.md)** - Use one shared Laos demo scenario in the
-   app or through the API.
-6. **[Configure a model](modelling/configured-models-curl.md)** - Create an EWARS variant and
-   run it with the same workflow.
-7. **[Build a model](modelling/chapkit-scaffold.md)** *(optional, modeller track)* - Scaffold
-   your own CHAP model with chapkit and register it. Needs the **source setup** from step 3.
+<div class="grid cards" markdown>
+
+-   :material-laptop:{ .lg .middle } &nbsp;__1. Prepare your machine__
+
+    ---
+
+    Install Docker, Git, and the small command-line tools used in the exercises.
+
+    [:octicons-arrow-right-24: Prepare](getting-started/prerequisites.md)
+
+-   :material-docker:{ .lg .middle } &nbsp;__2. Docker basics__ *(optional)*
+
+    ---
+
+    A quick primer: build and run one container, then a two-service stack with Compose.
+
+    [:octicons-arrow-right-24: Learn the basics](getting-started/docker-intro.md)
+
+-   :material-database:{ .lg .middle } &nbsp;__3. Start DHIS2__
+
+    ---
+
+    Run the Laos climate demo database and confirm that you can log in.
+
+    [:octicons-arrow-right-24: Start DHIS2](getting-started/start-dhis2.md)
+
+-   :material-link-variant:{ .lg .middle } &nbsp;__4. Connect CHAP__
+
+    ---
+
+    Choose the bundled or source setup and verify the DHIS2 route to CHAP.
+
+    [:octicons-arrow-right-24: Connect CHAP](getting-started/chap-setup.md)
+
+-   :material-apps:{ .lg .middle } &nbsp;__5. Install the apps__
+
+    ---
+
+    Add the Climate App and Modelling App from the DHIS2 App Hub.
+
+    [:octicons-arrow-right-24: Install apps](getting-started/install-apps.md)
+
+-   :material-chart-line:{ .lg .middle } &nbsp;__6. Evaluate and predict__
+
+    ---
+
+    Run one shared Laos demo scenario in the app or through the API.
+
+    [:octicons-arrow-right-24: Evaluate](modelling/index.md)
+
+-   :material-tune:{ .lg .middle } &nbsp;__7. Configure a model__
+
+    ---
+
+    Create an EWARS variant and run it with the same workflow.
+
+    [:octicons-arrow-right-24: Configure](modelling/configured-models-curl.md)
+
+-   :material-hammer-wrench:{ .lg .middle } &nbsp;__8. Build a model__ *(optional)*
+
+    ---
+
+    Scaffold your own CHAP model with chapkit and register it. Needs the source setup.
+
+    [:octicons-arrow-right-24: Build](modelling/chapkit-scaffold.md)
+
+</div>
 
 Each step starts with its prerequisites and ends with a link to the next step. Assignment
 boxes mark the checks that should pass before you move on.

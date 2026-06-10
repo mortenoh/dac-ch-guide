@@ -1,6 +1,6 @@
 # Development setup (source)
 
-This is the **development path** for step 3: build CHAP from a local clone so you can change
+This is the **development path** for step 4: build CHAP from a local clone so you can change
 chap-core or models. For the quicker alternative and its trade-offs, see
 [Choose how to run CHAP](chap-setup.md).
 
@@ -134,4 +134,4 @@ chap-core you built**.
 
 ## Next step
 
-Continue to [step 4: install the DHIS2 apps](install-apps.md).
+Continue to [step 5: install the DHIS2 apps](install-apps.md).

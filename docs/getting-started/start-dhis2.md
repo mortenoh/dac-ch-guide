@@ -1,6 +1,6 @@
 # Start DHIS2
 
-This is step 2 of the workshop. It starts DHIS2 with the Laos climate demo database; CHAP is
+This is step 3 of the workshop. It starts DHIS2 with the Laos climate demo database; CHAP is
 added in the next step.
 
 In this guide you bring up a complete DHIS2 instance on your own machine using Docker. It
@@ -138,4 +138,4 @@ docker compose down -v     # full reset: also wipe volumes (fresh dump + analyti
 
 ## Next step
 
-Continue to [step 3: choose how to connect CHAP](chap-setup.md).
+Continue to [step 4: choose how to connect CHAP](chap-setup.md).

@@ -1,0 +1,19 @@
+/* Grid cards: keep a clearly visible border; on hover darken the background a
+   touch and switch the border to the accent colour. */
+.md-typeset .grid.cards > :is(ul, ol) > li {
+  display: flex;
+  flex-direction: column;
+  border-color: var(--md-default-fg-color--lighter);
+  transition: border-color 250ms, box-shadow 250ms, background-color 250ms;
+}
+
+.md-typeset .grid.cards > :is(ul, ol) > li:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-color: var(--md-accent-fg-color);
+}
+
+/* Pin the call-to-action link (the last element) to the bottom of the card so
+   links line up across cards regardless of how long each description is. */
+.md-typeset .grid.cards > :is(ul, ol) > li > :last-child {
+  margin-top: auto;
+}

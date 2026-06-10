@@ -1,7 +1,7 @@
 # Configure a model
 
-This is step 6 of the workshop. It changes the model configuration while reusing the
-evaluation and prediction workflow from step 5.
+This is step 7 of the workshop. It changes the model configuration while reusing the
+evaluation and prediction workflow from step 6.
 
 A **configured model** is a **model template** plus a chosen set of **options** - a
 ready-to-run variant. The stock models you used earlier (like *CHAP-EWARS Model (chapkit)*) are
@@ -106,7 +106,7 @@ curl -fsS -u "$AUTH" "$CHAP/crud/configured-models" \
 13   CHAP-EWARS Model (chapkit) [Ewars climate + region-seasonal]
 ```
 
-Your variant now appears **everywhere the stock models do**, so run it however you ran step 5:
+Your variant now appears **everywhere the stock models do**, so run it however you ran step 6:
 
 - **In the Modelling App** - it shows up in the model picker (Evaluate -> New evaluation ->
   Select model) under its display name *CHAP-EWARS Model (chapkit) [Ewars climate +

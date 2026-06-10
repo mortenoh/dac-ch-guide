@@ -1,6 +1,6 @@
 # Register your model with CHAP
 
-This is step 7b. Your [scaffolded model](chapkit-scaffold.md) runs and passes `chapkit test` on
+This is step 8b. Your [scaffolded model](chapkit-scaffold.md) runs and passes `chapkit test` on
 its own. Now you connect it to chap-core: a chapkit model **self-registers** with chap when you
 point it at chap's registration endpoint. Once registered, it appears in chap-core's model list
 and in the Modelling App exactly like the built-in models, so the
@@ -11,7 +11,7 @@ on it unchanged.
     Run chap from the **[Development setup (source)](../getting-started/chap-core-from-source.md)**
     (the `chap-core` repo). You attach your model as a compose overlay on chap's own network, so
     chap can reach it by name - which the bundled image stack is not set up for. Your model
-    project from [step 7a](chapkit-scaffold.md) should sit next to the `chap-core` folder.
+    project from [step 8a](chapkit-scaffold.md) should sit next to the `chap-core` folder.
 
 ## Step 1 - How registration works
 

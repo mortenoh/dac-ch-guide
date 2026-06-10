@@ -1,6 +1,6 @@
 # Evaluation & prediction
 
-This is step 5 of the workshop. The configuration on this page is the single reference used
+This is step 6 of the workshop. The configuration on this page is the single reference used
 by both walkthroughs, so switch between them without re-entering a different scenario.
 
 With DHIS2, chap-core, and the apps running, you can now put a model to work. There are two
