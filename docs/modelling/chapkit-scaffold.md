@@ -67,6 +67,9 @@ on fixed paths in a per-run workspace:
   writes a predictions CSV (`--output`) with a **`sample_0`** column (add `sample_1`, `sample_2`,
   … for multiple probabilistic samples).
 
+These exact file names, paths, and config layouts are chapkit's
+[shell-runner contract](https://dhis2-chap.github.io/chapkit/guides/shell-runner-contract/).
+
 The scaffold ships a trivial example (it predicts the training mean). Replace the logic with
 your model. You usually also edit `main.py` to:
 
@@ -97,8 +100,9 @@ http://localhost:9090/docs
 ## Step 4 - Test it with `chapkit test`
 
 Before wiring anything to CHAP, sanity-check the model on its own. chapkit has a **built-in
-tester** that generates synthetic data and drives a full **config → train → predict** cycle
-against your running service, checking the endpoints and response shapes:
+[tester](https://dhis2-chap.github.io/chapkit/guides/testing-ml-services/)** that generates
+synthetic data and drives a full **config → train → predict** cycle against your running
+service, checking the endpoints and response shapes:
 
 ```bash
 uvx chapkit test --verbose
@@ -153,8 +157,10 @@ elsewhere (for example when deploying next to chap-core).
 ### Artifacts - every train and predict is saved
 
 Each training run stores a **model artifact**; each prediction stores a **prediction artifact**
-linked to the model it came from (a parent -> child lineage). List what `chapkit test` produced -
-either from the live service or straight from the SQLite file:
+linked to the model it came from (a parent -> child lineage). The hierarchy, artifact types, and
+retention are covered in chapkit's
+[Artifact Storage](https://dhis2-chap.github.io/chapkit/guides/artifact-storage/) guide. List
+what `chapkit test` produced - either from the live service or straight from the SQLite file:
 
 ```bash
 uvx chapkit artifact list --url http://localhost:9090     # via the running service
@@ -171,7 +177,9 @@ uvx chapkit artifact download <artifact-id> --url http://localhost:9090 --extrac
 
 ### The REST API behind it
 
-All of that is plain HTTP - browse it interactively at `/docs`, or curl it:
+All of that is plain HTTP - browse it interactively at `/docs`, or curl it. The `$train` and
+`$predict` endpoints, the job lifecycle, and the artifact responses are documented in chapkit's
+[ML Workflows](https://dhis2-chap.github.io/chapkit/guides/ml-workflows/) guide:
 
 ```bash
 curl -s http://localhost:9090/api/v1/configs   | jq   # configs available to train against
@@ -186,11 +194,15 @@ curl -s "http://localhost:9090/api/v1/artifacts/<artifact-id>/\$tree" | jq
     endpoints for you: it pushes a config, calls `$train`, then `$predict`, and reads back the
     artifacts. Running them by hand here is just doing manually what chap automates.
 
-!!! tip "Full chapkit documentation"
-    chapkit does much more than this guide covers - artifact retention and cleanup, monitoring
-    (`/metrics`), request validation, the functional and class-based runner styles, R model
-    quickstarts, and migrating an existing `MLproject`. See the official docs at
-    [dhis2-chap.github.io/chapkit](https://dhis2-chap.github.io/chapkit/).
+!!! tip "More in the chapkit docs"
+    Other topics, each on its own page:
+    [scaffolding and templates](https://dhis2-chap.github.io/chapkit/guides/cli-scaffolding/),
+    [configuration management](https://dhis2-chap.github.io/chapkit/guides/configuration-management/),
+    [monitoring (`/metrics`)](https://dhis2-chap.github.io/chapkit/guides/monitoring/),
+    [database migrations](https://dhis2-chap.github.io/chapkit/guides/database-migrations/),
+    [migrating an existing `MLproject`](https://dhis2-chap.github.io/chapkit/guides/mlproject-migrate/),
+    and the full [API reference](https://dhis2-chap.github.io/chapkit/api-reference/) -
+    indexed at [dhis2-chap.github.io/chapkit](https://dhis2-chap.github.io/chapkit/).
 
 ## What's next
 

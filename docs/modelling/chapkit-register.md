@@ -19,7 +19,9 @@ The scaffolded `main.py` ends with `.with_registration()`. That call does nothin
 var **`SERVICEKIT_ORCHESTRATOR_URL`** is set to chap's register endpoint. When it is, the
 service registers itself on startup and pings periodically to stay alive. chap then **syncs it
 into its model list** - it shows up as a model template (flagged `usesChapkit`) and chap seeds a
-ready-to-run configured model from it.
+ready-to-run configured model from it. chapkit's
+[Deploying to chap-core](https://dhis2-chap.github.io/chapkit/guides/deploying-to-chap-core/)
+guide documents this registration flow in full.
 
 ## Step 2 - Add a compose overlay onto chap-core
 
