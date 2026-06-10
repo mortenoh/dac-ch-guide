@@ -186,6 +186,12 @@ curl -s "http://localhost:9090/api/v1/artifacts/<artifact-id>/\$tree" | jq
     endpoints for you: it pushes a config, calls `$train`, then `$predict`, and reads back the
     artifacts. Running them by hand here is just doing manually what chap automates.
 
+!!! tip "Full chapkit documentation"
+    chapkit does much more than this guide covers - artifact retention and cleanup, monitoring
+    (`/metrics`), request validation, the functional and class-based runner styles, R model
+    quickstarts, and migrating an existing `MLproject`. See the official docs at
+    [dhis2-chap.github.io/chapkit](https://dhis2-chap.github.io/chapkit/).
+
 ## What's next
 
 Your model runs and passes its own tests. Next, [register it with CHAP](chapkit-register.md) so
