@@ -4,6 +4,11 @@ Everything the Modelling App does, it does by calling APIs - so you can drive th
 evaluation and prediction from the command line. This mirrors the [UI walkthrough](with-ui.md)
 using the [shared configuration](index.md), and is handy for scripting and automation.
 
+!!! note "Before you start"
+    DHIS2 + chap-core are running and connected ([step 5: install the apps](../getting-started/install-apps.md)),
+    and you have **`curl`** and **`jq`** (from [step 1](../getting-started/prerequisites.md)). The
+    exact org units, periods, and data items come from the [shared configuration](index.md) (step 6).
+
 Two APIs are involved:
 
 - the **DHIS2 analytics API** (`/api/analytics`) - where the data comes from;

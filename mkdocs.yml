@@ -20,7 +20,6 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
-    - navigation.indexes
     - navigation.sections
     - navigation.top
     - navigation.tracking
@@ -32,7 +31,7 @@ nav:
   - Start here: index.md
   - Workshop:
       - 1. Prepare your machine: getting-started/prerequisites.md
-      - 2. Docker basics (optional):
+      - 2. Docker basics:
           - Your first container: getting-started/docker-intro.md
           - Services with Compose: getting-started/docker-compose-intro.md
       - 3. Start DHIS2: getting-started/start-dhis2.md
@@ -42,7 +41,7 @@ nav:
           - Development setup (source): getting-started/chap-core-from-source.md
       - 5. Install the apps: getting-started/install-apps.md
       - 6. Evaluate and predict:
-          - Workflow and demo data: modelling/index.md
+          - Overview and demo data: modelling/index.md
           - In the Modelling App: modelling/with-ui.md
           - Through the API: modelling/with-curl.md
       - 7. Configure a model: modelling/configured-models-curl.md

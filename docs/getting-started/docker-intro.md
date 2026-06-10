@@ -1,12 +1,12 @@
 # Docker basics: your first container
 
-This is step 2 of the workshop - an **optional primer**, in two short pages. The workshop runs
-**everything** in Docker - DHIS2, CHAP, the databases, and (on the modeller track) your own model
-- so before you orchestrate those big stacks, it helps to build and run **one tiny container
-yourself** so the moving parts are familiar.
+This is step 2 of the workshop. The workshop runs **everything** in Docker - DHIS2, CHAP, the
+databases, and (on the modeller track) your own model - so before you orchestrate those big
+stacks, it helps to build and run **one tiny container yourself** so the moving parts are
+familiar.
 
-Skip both pages if you are already comfortable with Docker and Compose. What you
-build here - a minimal Python web service in a container - is, in miniature, exactly what a
+What you build here - a minimal Python web service in a container - is, in miniature, exactly
+what a
 chapkit model service is ([step 8: build a model](../modelling/chapkit-scaffold.md)): a small web
 app that runs in a container and answers HTTP requests. The next page,
 [Docker Compose basics](docker-compose-intro.md), grows it into several containers working

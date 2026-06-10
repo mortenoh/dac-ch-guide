@@ -10,12 +10,9 @@ time.
 **`compose.yml`**, and `docker compose up` starts the whole set on a shared network where each
 service can reach the others **by name**.
 
-This page is an **optional primer** and continues the `hello-docker` project from the previous
-page.
-
 !!! note "Before you start"
     You have the `hello-docker` project from [Docker basics](docker-intro.md) (the `Dockerfile`
-    and the FastAPI app). You will add a second service to it here.
+    and the FastAPI app from step 2) - this page continues it by adding a second service.
 
 ## Step 1 - Give the app a second service to talk to
 

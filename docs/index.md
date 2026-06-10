@@ -2,8 +2,8 @@
 
 Build a local **DHIS2 + CHAP** environment, run an evaluation and prediction, then inspect
 and extend the workflow. The core path has a single choice that does not change the rest: use
-released CHAP images for the quickest setup, or build CHAP from source. The optional
-**modeller track** (step 8, building your own model) needs the source setup.
+released CHAP images for the quickest setup, or build CHAP from source. The **modeller track**
+(step 8, building your own model) needs the source setup.
 
 ## Follow the workshop
 
@@ -17,7 +17,7 @@ released CHAP images for the quickest setup, or build CHAP from source. The opti
 
     [:octicons-arrow-right-24: Prepare](getting-started/prerequisites.md)
 
--   :material-docker:{ .lg .middle } &nbsp;__2. Docker basics__ *(optional)*
+-   :material-docker:{ .lg .middle } &nbsp;__2. Docker basics__
 
     ---
 
@@ -65,7 +65,7 @@ released CHAP images for the quickest setup, or build CHAP from source. The opti
 
     [:octicons-arrow-right-24: Configure](modelling/configured-models-curl.md)
 
--   :material-hammer-wrench:{ .lg .middle } &nbsp;__8. Build a model__ *(optional)*
+-   :material-hammer-wrench:{ .lg .middle } &nbsp;__8. Build a model__
 
     ---
 

@@ -2,8 +2,12 @@
 
 This is the only branch in the core setup. Pick **one** route; both end with DHIS2 connected
 to the same CHAP API, so the **core workshop (steps 5-7) is identical** either way. Only the
-optional modeller track ([step 8: build a model](../modelling/chapkit-scaffold.md)) needs the
-**source setup**, because it registers your model as a compose overlay on chap's own network.
+modeller track ([step 8: build a model](../modelling/chapkit-scaffold.md)) needs the **source
+setup**, because it registers your model as a compose overlay on chap's own network.
+
+!!! note "Before you start"
+    DHIS2 is running and you can log in with `admin` / `district`
+    ([step 3: start DHIS2](start-dhis2.md)). Both routes below add CHAP to that running DHIS2.
 
 | Path | Choose it when | What runs |
 |------|----------------|-----------|

@@ -4,6 +4,12 @@ This walks through an **evaluation (backtest)** and then a **prediction** in the
 App, using the [shared configuration](index.md). Open the **Modeling** app from the DHIS2 apps
 menu to begin.
 
+!!! note "Before you start"
+    DHIS2 + chap-core are running and connected, and the **Modelling App** is installed
+    ([step 5: install the apps](../getting-started/install-apps.md)). Keep the
+    [shared configuration](index.md) (step 6) open for the exact model, periods, org units, and
+    data mapping used below.
+
 ## Part 1 - Evaluate (backtest)
 
 An evaluation runs the model over historical periods and compares its predictions to what
@@ -157,5 +163,5 @@ intervals** - for the coming 3 months.
 ## Next step
 
 Continue to [step 7: configure a model](configured-models-curl.md). The
-[API walkthrough](with-curl.md) is an optional parallel version of this exercise for scripting
-and automation.
+[API walkthrough](with-curl.md) is a parallel version of this exercise for scripting and
+automation.

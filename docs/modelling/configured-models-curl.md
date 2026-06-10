@@ -7,6 +7,11 @@ A **configured model** is a **model template** plus a chosen set of **options** 
 ready-to-run variant. The stock models you used earlier (like *CHAP-EWARS Model (chapkit)*) are
 configured models; here you create your own variant.
 
+!!! note "Before you start"
+    DHIS2 + chap-core are running and connected ([step 5](../getting-started/install-apps.md)),
+    and you have worked through [evaluate and predict](index.md) (step 6) so the run flow is
+    familiar. You need **`curl`** and **`jq`** (from [step 1](../getting-started/prerequisites.md)).
+
 !!! info "Why curl here"
     The Modelling App also has a **New model** screen, but this guide configures the model over
     the **API on purpose**: it is scriptable, shows exactly which template, options, and

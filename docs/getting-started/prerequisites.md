@@ -89,9 +89,6 @@ the local DHIS2 and CHAP stack.
 
 ## Next step
 
-New to Docker? Continue to [step 2: Docker basics](docker-intro.md) - an optional primer that
-builds and runs one tiny container (and then a two-service stack) from scratch, a good warm-up
-before the workshop brings up whole stacks of them.
-
-Already comfortable with Docker and Compose? Skip ahead to
-[step 3: start DHIS2](start-dhis2.md).
+Continue to [step 2: Docker basics](docker-intro.md) - build and run a container, then a
+two-service stack, before the workshop brings up whole stacks of them. If you already know Docker
+and Compose, go straight to [step 3: start DHIS2](start-dhis2.md).
