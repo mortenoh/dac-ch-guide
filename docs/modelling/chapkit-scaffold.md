@@ -108,6 +108,11 @@ service, checking the endpoints and response shapes:
 uvx chapkit test --verbose
 ```
 
+!!! warning "`No such command 'test'`?"
+    The `test` subcommand only appears when you run `chapkit` from **inside a model
+    project** - if you see this error, `cd my-model` first. (`init` is the opposite: it
+    only shows up *outside* a project.)
+
 ```text
 Running 1 training job(s)...    [OK] Training ...: Job completed successfully
 Running 1 prediction job(s)...  [OK] Prediction ...: verified
@@ -151,15 +156,20 @@ scaffold's `compose.yml` puts that `data/` directory in a **named volume**, so t
 survives `docker compose restart` and `up`:
 
 ```bash
-docker compose exec my-model ls -lh data/chapkit.db
+docker compose exec my_model ls -lh data/
 ```
 
-That file lives **inside the container's volume**, not on your host. To read it with the CLI
-directly, copy it out first:
+(Compose named the service **`my_model`** - the project slug, with underscores - so that is
+the name `exec` and `cp` want, even though the folder is `my-model`.)
+
+Those files live **inside the container's volume**, not on your host. To read the database
+with the CLI directly, copy it out first - and copy the whole `data/` directory, not just
+`chapkit.db`: SQLite runs in WAL mode, so recent writes sit in the `chapkit.db-wal` sidecar
+file, and a copy of the bare `.db` alone shows no artifacts.
 
 ```bash
-docker compose cp my-model:/work/data/chapkit.db ./chapkit.db
-uvx chapkit artifact list --database ./chapkit.db
+docker compose cp my_model:/work/data ./chapkit-data
+uvx chapkit artifact list --database ./chapkit-data/chapkit.db
 ```
 
 Point `DATABASE_URL` at a different file - or at a hosted Postgres - to move that state

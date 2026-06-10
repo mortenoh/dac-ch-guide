@@ -41,6 +41,12 @@ following - that does not stop the stack):
 docker compose logs -f
 ```
 
+!!! note "Seen `make start` in the repository README?"
+    The repository's own README drives the same stack through a Makefile (`make start`,
+    `make start-chap`, `make logs`). Those targets wrap the exact `docker compose` commands
+    used in these guides - we spell the commands out so you can see what actually runs.
+    Use whichever you prefer; they manage the same containers.
+
 The **first** start does the most work:
 
 1. Downloads and prepares the Laos climate demo database (a few hundred MB - one time).
@@ -60,8 +66,8 @@ docker compose ps -a
 ```
 
 You are waiting for the web container to report **healthy** and the one-shot helpers
-(`db-dump`, `db-prep`, `analytics`, `chap-route-init`) to have **Exited (0)** - that exit code
-means they finished their job, not that they failed:
+(`dhis2-db-dump`, `dhis2-db-prep`, `dhis2-analytics`, `chap-route-init`) to have **Exited (0)** -
+that exit code means they finished their job, not that they failed:
 
 ```text
 docker-dhis2-core-dhis2-web-1         Up (healthy)

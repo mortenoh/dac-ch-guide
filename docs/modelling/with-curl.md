@@ -126,7 +126,10 @@ echo "$JOB_ID"
 
 ## Step 6 - Wait for the job, then read the result
 
-A job's status is a plain JSON string. Poll it until it reads `"SUCCESS"`:
+A job's status is a plain JSON string. It moves through `"PENDING"` (queued) ->
+`"STARTED"` (the worker is running the model) -> `"SUCCESS"`; a `"FAILURE"` means the run
+broke - read its log (see [Find and diagnose failures](../operations/logs.md)). Poll it
+until it reads `"SUCCESS"`:
 
 ```bash
 curl -fsS -u "$AUTH" "$CHAP/jobs/$JOB_ID"
